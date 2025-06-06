@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "@/pages/dashboard";
 import Domain from "@/pages/domain";
 import Scenario from "@/pages/scenario";
+import SecurityTools from "@/pages/security-tools";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/domain/:id" component={Domain} />
       <Route path="/scenario/:id" component={Scenario} />
+      <Route path="/tools" component={SecurityTools} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -130,7 +130,7 @@ export class MemStorage implements IStorage {
     });
     this.currentDomainId = 6;
 
-    // Create scenarios
+    // Create comprehensive scenarios based on CompTIA Security+ SY0-701 content
     const scenariosData: Omit<Scenario, 'id'>[] = [
       {
         title: "SQL Injection Attack Investigation",
@@ -391,6 +391,366 @@ export class MemStorage implements IStorage {
             }
           ]
         }
+      },
+      {
+        title: "Cross-Site Scripting (XSS) Defense",
+        description: "Identify and prevent XSS vulnerabilities in web applications through hands-on testing.",
+        type: "lab",
+        domainId: 2,
+        difficulty: "intermediate",
+        estimatedTime: 20,
+        xpReward: 160,
+        content: {
+          background: "You are conducting a security assessment of a message board application. Users have reported suspicious behavior when viewing certain posts.",
+          scenario: "Analyze the message board code for XSS vulnerabilities and recommend proper input validation techniques.",
+          codeExample: "<p>Hello everyone,</p>\n<p>I am planning an upcoming trip to <A HREF='https://www.mlb.com/mets/ballpark'>Citi Field</A></p>\n<p>Thanks!</p>\n<SCRIPT>alert('Cross-site scripting!')</SCRIPT>",
+          questions: [
+            {
+              question: "What type of XSS attack is demonstrated in the code example?",
+              options: ["Reflected XSS", "Stored XSS", "DOM-based XSS", "Blind XSS"],
+              correct: 1,
+              explanation: "This is stored XSS because the malicious script is permanently stored in the message board and executed when other users view the post."
+            },
+            {
+              question: "What is the most effective defense against XSS attacks?",
+              options: ["Input filtering only", "Output encoding/escaping", "Content Security Policy only", "JavaScript validation"],
+              correct: 1,
+              explanation: "Output encoding ensures that user input is treated as data rather than executable code when displayed in web pages."
+            },
+            {
+              question: "Which HTTP header helps prevent XSS attacks?",
+              options: ["X-Frame-Options", "Content-Security-Policy", "X-Content-Type-Options", "Strict-Transport-Security"],
+              correct: 1,
+              explanation: "Content-Security-Policy (CSP) headers help prevent XSS by controlling which resources can be loaded and executed."
+            }
+          ]
+        }
+      },
+      {
+        title: "CVSS Vulnerability Assessment",
+        description: "Learn to calculate and interpret Common Vulnerability Scoring System (CVSS) scores for risk prioritization.",
+        type: "scenario",
+        domainId: 5,
+        difficulty: "advanced",
+        estimatedTime: 25,
+        xpReward: 280,
+        content: {
+          background: "Your organization discovered a vulnerability in a web server that allows remote code execution. You need to calculate the CVSS score to prioritize remediation efforts.",
+          scenario: "Using CVSS v3.1 metrics, calculate the severity score for a network-exploitable vulnerability that requires no user interaction and can compromise system confidentiality, integrity, and availability.",
+          questions: [
+            {
+              question: "For a network-exploitable vulnerability, what is the Attack Vector (AV) score?",
+              options: ["Physical (0.20)", "Local (0.55)", "Adjacent (0.62)", "Network (0.85)"],
+              correct: 3,
+              explanation: "Network attack vector has the highest score (0.85) as the vulnerability can be exploited remotely over a network."
+            },
+            {
+              question: "If a vulnerability requires no user interaction, what is the User Interaction (UI) score?",
+              options: ["None (0.85)", "Required (0.62)", "Low (0.44)", "High (0.27)"],
+              correct: 0,
+              explanation: "When no user interaction is required, the score is 0.85, indicating higher exploitability."
+            },
+            {
+              question: "For complete system compromise (high confidentiality, integrity, and availability impact), what would be the Impact Subscore?",
+              options: ["3.6", "5.2", "6.0", "7.4"],
+              correct: 2,
+              explanation: "High impact across all three CIA components (Confidentiality, Integrity, Availability) results in the maximum impact subscore of 6.0."
+            }
+          ]
+        }
+      },
+      {
+        title: "Vigenère Cipher Cryptanalysis",
+        description: "Decrypt messages using classical cryptographic techniques and understand historical encryption methods.",
+        type: "challenge",
+        domainId: 1,
+        difficulty: "advanced",
+        estimatedTime: 30,
+        xpReward: 320,
+        content: {
+          background: "During a digital forensics investigation, you discovered an encrypted message that appears to use a Vigenère cipher with the keyword 'APPLE'. Understanding classical cryptography helps in modern security analysis.",
+          scenario: "Decrypt the message 'SEKPT ETIAJ' using the Vigenère cipher table and the keyword 'APPLE'. Analyze the strengths and weaknesses of this encryption method.",
+          codeExample: "Keyword: APPLE\nCiphertext: SEKPT ETIAJ\nVigenère Table Reference: A=0, B=1, C=2... Z=25",
+          questions: [
+            {
+              question: "What is the decrypted plaintext message?",
+              options: ["SECRET MESSAGE", "HELLO WORLD", "CYBER SECURITY", "HIDDEN TEXT"],
+              correct: 0,
+              explanation: "Using the Vigenère cipher with keyword 'APPLE', 'SEKPT ETIAJ' decrypts to 'SECRET MESSAGE'."
+            },
+            {
+              question: "What is the main weakness of the Vigenère cipher?",
+              options: ["Too complex to implement", "Vulnerable to frequency analysis with long enough ciphertext", "Requires too much computational power", "Cannot encrypt long messages"],
+              correct: 1,
+              explanation: "With sufficient ciphertext, frequency analysis can reveal the keyword length and eventually break the cipher."
+            },
+            {
+              question: "How does the Vigenère cipher improve upon the Caesar cipher?",
+              options: ["It uses different shift values for each letter", "It requires no key", "It's impossible to break", "It only works with numbers"],
+              correct: 0,
+              explanation: "Unlike Caesar cipher's single shift value, Vigenère uses different shift values based on the repeating keyword."
+            }
+          ]
+        }
+      },
+      {
+        title: "Web Application Firewall Configuration",
+        description: "Configure and tune a Web Application Firewall to protect against common web attacks.",
+        type: "lab",
+        domainId: 3,
+        difficulty: "intermediate",
+        estimatedTime: 22,
+        xpReward: 200,
+        content: {
+          background: "Your organization needs to deploy a Web Application Firewall (WAF) to protect critical web applications from OWASP Top 10 vulnerabilities.",
+          scenario: "Configure WAF rules to detect and block SQL injection, XSS, and directory traversal attacks while minimizing false positives.",
+          questions: [
+            {
+              question: "Where should a WAF be positioned in the network architecture?",
+              options: ["Behind the web server", "In the screened subnet (DMZ)", "On user workstations", "In the internal network only"],
+              correct: 1,
+              explanation: "WAFs are typically placed in the screened subnet (DMZ) between the internet and internal network to filter malicious traffic before it reaches web servers."
+            },
+            {
+              question: "What is a common challenge when implementing WAF rules?",
+              options: ["High cost", "Balancing security with false positive rates", "Requires physical access", "Only works with HTTPS"],
+              correct: 1,
+              explanation: "WAF administrators must carefully tune rules to block attacks while avoiding false positives that could block legitimate traffic."
+            },
+            {
+              question: "Which WAF detection method examines patterns in HTTP requests?",
+              options: ["Signature-based detection", "Behavioral analysis", "Statistical analysis", "Machine learning only"],
+              correct: 0,
+              explanation: "Signature-based detection uses predefined patterns to identify known attack signatures in HTTP requests and responses."
+            }
+          ]
+        }
+      },
+      {
+        title: "Session Management Security",
+        description: "Implement secure session management practices to prevent session hijacking and replay attacks.",
+        type: "scenario",
+        domainId: 2,
+        difficulty: "intermediate",
+        estimatedTime: 18,
+        xpReward: 170,
+        content: {
+          background: "A web application uses cookies for session management. Security testing revealed potential vulnerabilities in how sessions are created, maintained, and terminated.",
+          scenario: "Design secure session management controls including proper cookie configuration, session timeout, and protection against session attacks.",
+          questions: [
+            {
+              question: "Which cookie attribute prevents client-side script access to session cookies?",
+              options: ["Secure", "HttpOnly", "SameSite", "Domain"],
+              correct: 1,
+              explanation: "The HttpOnly attribute prevents JavaScript from accessing the cookie, reducing XSS attack impact on session hijacking."
+            },
+            {
+              question: "What is session fixation and how can it be prevented?",
+              options: ["Reusing the same session ID", "Generate new session ID after successful authentication", "Using predictable session IDs", "Storing passwords in sessions"],
+              correct: 1,
+              explanation: "Session fixation occurs when an attacker sets a known session ID. Prevention involves generating new session IDs after authentication."
+            },
+            {
+              question: "What should happen when a user logs out?",
+              options: ["Hide the logout button", "Session ID should be invalidated on server", "Clear browser cache only", "Redirect to login page only"],
+              correct: 1,
+              explanation: "Proper logout requires invalidating the session on the server side to prevent session reuse."
+            }
+          ]
+        }
+      },
+      {
+        title: "Directory Traversal Attack Prevention",
+        description: "Identify and prevent directory traversal vulnerabilities that expose sensitive files.",
+        type: "lab",
+        domainId: 2,
+        difficulty: "beginner",
+        estimatedTime: 15,
+        xpReward: 140,
+        content: {
+          background: "A web application allows users to download documents using URLs with file parameters. Security testing reveals potential directory traversal vulnerabilities.",
+          scenario: "Analyze URL patterns that could lead to unauthorized file access and implement proper input validation.",
+          codeExample: "Normal: www.mycompany.com/getDocument.php?documentID=1841\nMalicious: www.mycompany.com/getDocument.php?documentID=../../../etc/passwd",
+          questions: [
+            {
+              question: "What does the '../' sequence attempt to do in a directory traversal attack?",
+              options: ["Create new directories", "Navigate up directory levels", "Delete files", "Compress files"],
+              correct: 1,
+              explanation: "../ sequences attempt to navigate up directory levels to access files outside the intended directory."
+            },
+            {
+              question: "Which is the most effective defense against directory traversal attacks?",
+              options: ["Hiding file extensions", "Input validation and sanitization", "Using longer file names", "Encrypting all files"],
+              correct: 1,
+              explanation: "Proper input validation and sanitization prevents malicious path manipulation by filtering dangerous characters and sequences."
+            }
+          ]
+        }
+      },
+      {
+        title: "Steganography Detection Lab",
+        description: "Learn to detect hidden information in digital files using steganography analysis tools.",
+        type: "lab",
+        domainId: 4,
+        difficulty: "advanced",
+        estimatedTime: 28,
+        xpReward: 290,
+        content: {
+          background: "During a digital forensics investigation, you suspect that sensitive information is being hidden within image files using steganography techniques.",
+          scenario: "Use steganography detection tools to identify hidden data and extract concealed information from digital images.",
+          questions: [
+            {
+              question: "What is steganography's primary advantage over encryption?",
+              options: ["Faster processing", "Hidden existence of the message", "Stronger security", "Easier to implement"],
+              correct: 1,
+              explanation: "Steganography's main advantage is that it hides the very existence of the secret message, unlike encryption which reveals that secret data exists."
+            },
+            {
+              question: "Which file metadata might reveal steganography usage?",
+              options: ["File size inconsistencies", "Creation date", "File permissions", "File name"],
+              correct: 0,
+              explanation: "Unusual file sizes compared to similar images might indicate hidden data, as steganography can slightly increase file size."
+            },
+            {
+              question: "What is the LSB (Least Significant Bit) method in steganography?",
+              options: ["Changing the least important bits of pixels", "Using the largest file size", "Creating low-resolution images", "Hiding data in file headers"],
+              correct: 0,
+              explanation: "LSB steganography hides data by replacing the least significant bits of pixel values, causing minimal visual changes."
+            }
+          ]
+        }
+      },
+      {
+        title: "NIST Cybersecurity Framework Implementation",
+        description: "Apply the NIST Cybersecurity Framework to develop organizational security strategies.",
+        type: "scenario",
+        domainId: 5,
+        difficulty: "advanced",
+        estimatedTime: 35,
+        xpReward: 360,
+        content: {
+          background: "Your organization needs to implement the NIST Cybersecurity Framework to improve its security posture and compliance with industry standards.",
+          scenario: "Map current security controls to the five NIST Framework functions and develop an implementation roadmap.",
+          questions: [
+            {
+              question: "What are the five core functions of the NIST Cybersecurity Framework?",
+              options: ["Prevent, Detect, Respond, Recover, Learn", "Identify, Protect, Detect, Respond, Recover", "Plan, Do, Check, Act, Improve", "Assess, Control, Monitor, Review, Update"],
+              correct: 1,
+              explanation: "The NIST Framework's five functions are: Identify, Protect, Detect, Respond, and Recover."
+            },
+            {
+              question: "Which NIST function involves developing appropriate safeguards?",
+              options: ["Identify", "Protect", "Detect", "Respond"],
+              correct: 1,
+              explanation: "The Protect function focuses on developing and implementing appropriate safeguards to ensure delivery of critical services."
+            },
+            {
+              question: "What is the purpose of the Framework Implementation Tiers?",
+              options: ["Ranking threat severity", "Describing cybersecurity risk management practices", "Classifying data sensitivity", "Measuring financial impact"],
+              correct: 1,
+              explanation: "Implementation Tiers describe the degree to which an organization's cybersecurity risk management practices exhibit the characteristics in the Framework."
+            }
+          ]
+        }
+      },
+      {
+        title: "Zero Trust Architecture Design",
+        description: "Design a Zero Trust security model for modern enterprise networks and cloud environments.",
+        type: "challenge",
+        domainId: 3,
+        difficulty: "advanced",
+        estimatedTime: 40,
+        xpReward: 400,
+        content: {
+          background: "Traditional perimeter-based security is insufficient for modern hybrid cloud environments. Your organization needs to implement Zero Trust principles.",
+          scenario: "Design a Zero Trust architecture that eliminates implicit trust and continuously validates every transaction.",
+          questions: [
+            {
+              question: "What is the core principle of Zero Trust?",
+              options: ["Trust but verify", "Never trust, always verify", "Implicit trust within perimeter", "Trust internal users"],
+              correct: 1,
+              explanation: "Zero Trust operates on 'never trust, always verify' - no implicit trust is granted regardless of location or user credentials."
+            },
+            {
+              question: "In Zero Trust, what should happen to network microsegmentation?",
+              options: ["Eliminate all segmentation", "Increase granular segmentation", "Only segment at the perimeter", "Use physical segmentation only"],
+              correct: 1,
+              explanation: "Zero Trust requires granular microsegmentation to limit lateral movement and control access between resources."
+            },
+            {
+              question: "Which technology is essential for Zero Trust identity verification?",
+              options: ["Single factor authentication", "Multi-factor authentication", "Password-only login", "Biometrics only"],
+              correct: 1,
+              explanation: "Multi-factor authentication is crucial for Zero Trust to ensure strong identity verification before granting access."
+            }
+          ]
+        }
+      },
+      {
+        title: "Advanced Persistent Threat (APT) Analysis",
+        description: "Investigate sophisticated attack campaigns and develop defense strategies against nation-state actors.",
+        type: "challenge",
+        domainId: 4,
+        difficulty: "advanced",
+        estimatedTime: 45,
+        xpReward: 450,
+        content: {
+          background: "Your organization detected unusual network activity suggesting a sophisticated, long-term compromise typical of Advanced Persistent Threats.",
+          scenario: "Analyze attack indicators, establish timeline of compromise, and develop containment strategies for APT incidents.",
+          questions: [
+            {
+              question: "What distinguishes APT attacks from other cyber threats?",
+              options: ["Higher financial motivation", "Longer duration and sophisticated techniques", "Use of social media", "Focus on small businesses"],
+              correct: 1,
+              explanation: "APTs are characterized by prolonged, sophisticated campaigns often attributed to nation-state actors with specific strategic objectives."
+            },
+            {
+              question: "In APT investigations, what is the 'dwell time'?",
+              options: ["Time to patch vulnerabilities", "Duration between initial compromise and detection", "Time to complete incident response", "Period for system recovery"],
+              correct: 1,
+              explanation: "Dwell time refers to how long attackers remain undetected in the environment, often months or years for APTs."
+            },
+            {
+              question: "Which STIX object type would describe an APT group's characteristics?",
+              options: ["Indicator", "Malware", "Threat-Actor", "Attack-Pattern"],
+              correct: 2,
+              explanation: "The Threat-Actor STIX object describes the characteristics, motivations, and capabilities of APT groups."
+            }
+          ]
+        }
+      },
+      {
+        title: "Compliance Framework Mapping",
+        description: "Map security controls across multiple compliance frameworks including SOX, HIPAA, and PCI DSS.",
+        type: "scenario",
+        domainId: 5,
+        difficulty: "intermediate",
+        estimatedTime: 30,
+        xpReward: 300,
+        content: {
+          background: "Your organization operates in multiple industries requiring compliance with SOX, HIPAA, and PCI DSS regulations simultaneously.",
+          scenario: "Create a control mapping strategy that efficiently addresses overlapping requirements across multiple compliance frameworks.",
+          questions: [
+            {
+              question: "Which compliance framework primarily addresses financial reporting controls?",
+              options: ["HIPAA", "PCI DSS", "SOX", "GDPR"],
+              correct: 2,
+              explanation: "The Sarbanes-Oxley Act (SOX) focuses on financial reporting accuracy and internal controls for public companies."
+            },
+            {
+              question: "What is the main focus of PCI DSS requirements?",
+              options: ["Healthcare data", "Financial reporting", "Credit card data protection", "Personal privacy"],
+              correct: 2,
+              explanation: "PCI DSS (Payment Card Industry Data Security Standard) specifically protects credit card transaction data."
+            },
+            {
+              question: "Which approach is most efficient for multi-framework compliance?",
+              options: ["Separate controls for each framework", "Common control framework with mapping", "Choose one primary framework", "Outsource all compliance"],
+              correct: 1,
+              explanation: "A common control framework mapped to multiple standards reduces redundancy and improves efficiency."
+            }
+          ]
+        }
       }
     ];
 
@@ -398,7 +758,7 @@ export class MemStorage implements IStorage {
       const scenarioRecord: Scenario = { ...scenario, id: index + 1 };
       this.scenarios.set(index + 1, scenarioRecord);
     });
-    this.currentScenarioId = 9;
+    this.currentScenarioId = 21;
 
     // Create user progress
     const progressData = [
