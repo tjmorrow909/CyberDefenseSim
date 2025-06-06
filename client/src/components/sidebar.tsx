@@ -114,10 +114,12 @@ export default function Sidebar({ domains }: SidebarProps) {
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 pb-2">
             Quick Actions
           </p>
-          <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer">
-            <FlaskConical className="text-accent w-5 h-5" />
-            <span className="text-foreground">Interactive Labs</span>
-          </div>
+          <Link href="/tools">
+            <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+              <FlaskConical className="text-accent w-5 h-5" />
+              <span className="text-foreground">Security Tools</span>
+            </div>
+          </Link>
           <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer">
             <VenetianMask className="text-purple-600 w-5 h-5" />
             <span className="text-foreground">Attack Scenarios</span>
