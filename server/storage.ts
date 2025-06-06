@@ -133,7 +133,7 @@ export class MemStorage implements IStorage {
     // Create scenarios
     const scenariosData: Omit<Scenario, 'id'>[] = [
       {
-        title: "SQL Injection Attack",
+        title: "SQL Injection Attack Investigation",
         description: "Practice identifying and preventing SQL injection vulnerabilities in a simulated e-commerce application.",
         type: "lab",
         domainId: 2,
@@ -141,21 +141,33 @@ export class MemStorage implements IStorage {
         estimatedTime: 15,
         xpReward: 150,
         content: {
-          background: "You are a security analyst at TechCorp's e-commerce platform. The development team has reported suspicious database queries in the application logs.",
-          scenario: "Investigate and identify potential SQL injection vulnerabilities.",
+          background: "You are a security analyst at TechCorp's e-commerce platform. The development team has reported suspicious database queries in the application logs showing unusual patterns in user authentication attempts.",
+          scenario: "Investigate the suspicious database queries and identify potential SQL injection vulnerabilities. Analyze the attack pattern and recommend mitigation strategies.",
           codeExample: "SELECT * FROM users WHERE id = '52019' OR 1=1--' AND password = ''",
           questions: [
             {
-              question: "What type of SQL injection attack is being attempted?",
-              options: ["Union-based", "Boolean-based blind", "Time-based blind", "Error-based"],
+              question: "What type of SQL injection attack is being attempted in the code example?",
+              options: ["Union-based SQL injection", "Boolean-based blind SQL injection", "Time-based blind SQL injection", "Error-based SQL injection"],
               correct: 1,
-              explanation: "This is a boolean-based blind SQL injection using the OR 1=1 condition."
+              explanation: "This is a boolean-based blind SQL injection using the OR 1=1 condition, which always evaluates to true, potentially bypassing authentication."
+            },
+            {
+              question: "What is the purpose of the '--' characters in the malicious query?",
+              options: ["To execute multiple queries", "To comment out the rest of the query", "To create a union statement", "To trigger an error message"],
+              correct: 1,
+              explanation: "The '--' characters comment out the rest of the SQL query, effectively removing the password check from the authentication logic."
+            },
+            {
+              question: "Which is the most effective primary defense against SQL injection attacks?",
+              options: ["Input validation only", "Parameterized queries/prepared statements", "Web application firewalls only", "Encryption of database fields"],
+              correct: 1,
+              explanation: "Parameterized queries (prepared statements) are the most effective defense as they separate SQL code from data, preventing malicious code injection."
             }
           ]
         }
       },
       {
-        title: "Network Segmentation",
+        title: "Network Segmentation Design",
         description: "Design a secure network architecture for a mid-size company with multiple departments.",
         type: "scenario",
         domainId: 3,
@@ -163,20 +175,32 @@ export class MemStorage implements IStorage {
         estimatedTime: 20,
         xpReward: 200,
         content: {
-          background: "You are tasked with designing network security for a 500-employee company with HR, Finance, IT, and Operations departments.",
-          scenario: "Create a segmented network that isolates critical systems while maintaining necessary connectivity.",
+          background: "You are the network security architect for SecureCorp, a 500-employee financial services company. The organization has HR, Finance, IT, Operations, and Customer Service departments. Recent security assessments have identified the need for better network segmentation.",
+          scenario: "Design a segmented network architecture that isolates critical systems while maintaining necessary business connectivity. Consider compliance requirements for financial data.",
           questions: [
             {
-              question: "Which network segmentation approach would be most appropriate for isolating the HR department?",
-              options: ["VLAN separation", "Physical separation", "DMZ placement", "VPN tunneling"],
+              question: "Which network segmentation approach would be most appropriate for isolating the Finance department's sensitive systems?",
+              options: ["VLAN separation with ACLs", "Complete physical separation", "DMZ placement", "VPN tunneling only"],
               correct: 0,
-              explanation: "VLAN separation provides logical isolation while maintaining network efficiency."
+              explanation: "VLAN separation with Access Control Lists provides logical isolation while maintaining network efficiency and allowing controlled access when needed."
+            },
+            {
+              question: "What should be the primary consideration when placing database servers in the network architecture?",
+              options: ["Maximize accessibility for all users", "Place in a separate network segment with strict access controls", "Connect directly to the internet for remote access", "Place on the same segment as user workstations"],
+              correct: 1,
+              explanation: "Database servers should be isolated in a separate network segment with strict access controls to protect sensitive data and limit attack surface."
+            },
+            {
+              question: "Which principle should guide inter-segment communication rules?",
+              options: ["Allow all traffic by default", "Principle of least privilege", "Maximum connectivity", "Open communication"],
+              correct: 1,
+              explanation: "The principle of least privilege ensures that network segments can only communicate when necessary for business functions, reducing potential attack paths."
             }
           ]
         }
       },
       {
-        title: "Ransomware Response",
+        title: "Ransomware Incident Response",
         description: "Lead an incident response team through a simulated ransomware attack on a hospital network.",
         type: "challenge",
         domainId: 4,
@@ -184,14 +208,186 @@ export class MemStorage implements IStorage {
         estimatedTime: 30,
         xpReward: 300,
         content: {
-          background: "A ransomware attack has encrypted critical patient data systems at Regional Medical Center.",
-          scenario: "You must coordinate the incident response while ensuring patient safety and data recovery.",
+          background: "You are the Chief Information Security Officer at Regional Medical Center. At 3:00 AM, your monitoring systems detect unusual file encryption activity across multiple hospital systems. Patient monitoring systems are beginning to malfunction, and staff report they cannot access electronic health records.",
+          scenario: "Coordinate the incident response while ensuring patient safety and data recovery. You must make critical decisions under pressure while following established incident response procedures.",
           questions: [
             {
               question: "What should be the immediate first step in this ransomware incident?",
-              options: ["Pay the ransom", "Isolate affected systems", "Restore from backup", "Contact law enforcement"],
+              options: ["Pay the ransom immediately", "Isolate affected systems from the network", "Restore from backup immediately", "Contact law enforcement first"],
               correct: 1,
-              explanation: "Isolating affected systems prevents further spread of the ransomware."
+              explanation: "Isolating affected systems prevents further spread of the ransomware and limits damage to critical hospital systems."
+            },
+            {
+              question: "According to incident response best practices, what is the correct order of the first three phases?",
+              options: ["Containment, Identification, Preparation", "Preparation, Identification, Containment", "Identification, Containment, Eradication", "Recovery, Identification, Containment"],
+              correct: 1,
+              explanation: "The NIST incident response phases begin with Preparation, then Identification (detection/analysis), followed by Containment."
+            },
+            {
+              question: "What is the most critical consideration unique to healthcare ransomware incidents?",
+              options: ["Financial losses", "Patient safety and life-critical systems", "Regulatory fines", "Public relations impact"],
+              correct: 1,
+              explanation: "In healthcare environments, patient safety and maintaining life-critical systems must be the top priority, as system failures can directly impact patient care and lives."
+            }
+          ]
+        }
+      },
+      {
+        title: "Phishing Email Analysis",
+        description: "Analyze suspicious emails and implement security awareness training recommendations.",
+        type: "lab",
+        domainId: 2,
+        difficulty: "beginner",
+        estimatedTime: 12,
+        xpReward: 120,
+        content: {
+          background: "As a security analyst at GlobalTech Corp, you've received multiple reports from employees about suspicious emails. The IT help desk has forwarded several examples for your analysis.",
+          scenario: "Analyze the phishing emails to identify attack vectors and develop recommendations for improving security awareness training.",
+          codeExample: "From: security@g0ogle.com\nSubject: Urgent: Verify Your Account\nDear User, Click here to verify: http://bit.ly/verify-now-urgent",
+          questions: [
+            {
+              question: "What is the primary red flag in this phishing email?",
+              options: ["The urgent tone", "The misspelled domain (g0ogle.com)", "The shortened URL", "All of the above"],
+              correct: 3,
+              explanation: "All elements are red flags: urgent language creates pressure, the misspelled domain mimics Google, and shortened URLs hide the real destination."
+            },
+            {
+              question: "What should employees do when they receive suspicious emails?",
+              options: ["Delete it immediately", "Forward it to colleagues as a warning", "Report it to the security team without clicking links", "Reply to ask if it's legitimate"],
+              correct: 2,
+              explanation: "Employees should report suspicious emails to the security team without interacting with any links or attachments."
+            }
+          ]
+        }
+      },
+      {
+        title: "Multi-Factor Authentication Implementation",
+        description: "Design and implement a comprehensive MFA strategy for enterprise systems.",
+        type: "scenario",
+        domainId: 1,
+        difficulty: "intermediate",
+        estimatedTime: 18,
+        xpReward: 180,
+        content: {
+          background: "TechStart Inc. has experienced several security incidents related to compromised user credentials. As the security architect, you need to implement multi-factor authentication across all business systems.",
+          scenario: "Design an MFA strategy that balances security with user experience, considering different user roles and system criticality levels.",
+          questions: [
+            {
+              question: "What are the three main factors in multi-factor authentication?",
+              options: ["Password, PIN, Token", "Something you know, something you have, something you are", "Username, Password, Email", "Biometrics, Smart cards, Passwords"],
+              correct: 1,
+              explanation: "The three authentication factors are: something you know (knowledge), something you have (possession), and something you are (inherence/biometrics)."
+            },
+            {
+              question: "For a high-security financial application, which MFA combination provides the strongest security?",
+              options: ["Password + SMS code", "Password + authenticator app + biometric", "Password + security questions", "Password + email verification"],
+              correct: 1,
+              explanation: "Password + authenticator app + biometric provides three factors and avoids the vulnerabilities of SMS-based authentication."
+            },
+            {
+              question: "What is the main security weakness of SMS-based two-factor authentication?",
+              options: ["It's too expensive", "It's inconvenient for users", "Susceptible to SIM swapping and interception", "It requires internet connection"],
+              correct: 2,
+              explanation: "SMS can be intercepted through SIM swapping attacks, man-in-the-middle attacks, or SS7 network vulnerabilities."
+            }
+          ]
+        }
+      },
+      {
+        title: "Cloud Security Assessment",
+        description: "Evaluate and secure a cloud infrastructure migration for a financial services company.",
+        type: "challenge",
+        domainId: 3,
+        difficulty: "advanced",
+        estimatedTime: 25,
+        xpReward: 250,
+        content: {
+          background: "FinSecure Bank is migrating critical financial applications to AWS cloud infrastructure. As the cloud security consultant, you must ensure the migration meets regulatory compliance and security best practices.",
+          scenario: "Assess the cloud architecture design and implement security controls that meet banking regulations while maintaining operational efficiency.",
+          questions: [
+            {
+              question: "What is the shared responsibility model in cloud security?",
+              options: ["Cloud provider is responsible for everything", "Customer is responsible for everything", "Responsibilities are shared between cloud provider and customer", "Only the cloud provider is responsible for security"],
+              correct: 2,
+              explanation: "The shared responsibility model divides security responsibilities: cloud provider secures the infrastructure, customer secures their data, applications, and configurations."
+            },
+            {
+              question: "For storing encrypted financial data in the cloud, which key management approach is most secure?",
+              options: ["Cloud provider manages all keys", "Customer manages keys on-premises with HSM", "Shared key management", "No encryption needed in the cloud"],
+              correct: 1,
+              explanation: "Customer-managed keys using Hardware Security Modules (HSM) provide the highest level of control and security for sensitive financial data."
+            },
+            {
+              question: "What is the most important principle for cloud network security architecture?",
+              options: ["Maximum connectivity", "Zero trust network access", "Open access by default", "Single perimeter defense"],
+              correct: 1,
+              explanation: "Zero trust network access assumes no implicit trust and verifies every connection, which is crucial for cloud environments."
+            }
+          ]
+        }
+      },
+      {
+        title: "Digital Forensics Investigation",
+        description: "Conduct a digital forensics investigation of a suspected data breach.",
+        type: "lab",
+        domainId: 4,
+        difficulty: "advanced",
+        estimatedTime: 35,
+        xpReward: 350,
+        content: {
+          background: "DataCorp has discovered unauthorized access to their customer database. As a digital forensics investigator, you must analyze system logs, memory dumps, and network traffic to determine the scope of the breach.",
+          scenario: "Investigate the suspected data breach using forensic techniques while maintaining evidence integrity and following legal procedures.",
+          questions: [
+            {
+              question: "What is the first principle of digital forensics investigation?",
+              options: ["Speed of investigation", "Preserving evidence integrity", "Finding the perpetrator quickly", "Minimizing business disruption"],
+              correct: 1,
+              explanation: "Preserving evidence integrity is paramount in digital forensics to ensure evidence is admissible in legal proceedings."
+            },
+            {
+              question: "What should be the order of volatility when collecting digital evidence?",
+              options: ["Hard drives, RAM, network traffic, logs", "RAM, network traffic, hard drives, logs", "Logs, hard drives, RAM, network traffic", "Network traffic, RAM, hard drives, logs"],
+              correct: 1,
+              explanation: "Evidence should be collected in order of volatility: RAM (most volatile), network traffic, hard drives, then logs (least volatile)."
+            },
+            {
+              question: "What is the purpose of creating forensic images of storage devices?",
+              options: ["To speed up the investigation", "To preserve original evidence while allowing analysis", "To compress the data", "To encrypt the evidence"],
+              correct: 1,
+              explanation: "Forensic images create bit-for-bit copies that preserve the original evidence while allowing investigators to perform analysis without altering the original."
+            }
+          ]
+        }
+      },
+      {
+        title: "Risk Assessment and Management",
+        description: "Conduct a comprehensive risk assessment for a healthcare organization.",
+        type: "scenario",
+        domainId: 5,
+        difficulty: "intermediate",
+        estimatedTime: 22,
+        xpReward: 220,
+        content: {
+          background: "HealthFirst Medical Center needs a comprehensive risk assessment to comply with HIPAA regulations and improve their overall security posture. You are leading the risk assessment team.",
+          scenario: "Identify, analyze, and prioritize security risks while developing appropriate risk treatment strategies for a healthcare environment.",
+          questions: [
+            {
+              question: "What is the formula for calculating risk in quantitative risk analysis?",
+              options: ["Risk = Threat + Vulnerability", "Risk = Probability × Impact", "Risk = Asset + Threat", "Risk = Vulnerability × Asset Value"],
+              correct: 1,
+              explanation: "Risk is calculated as the probability of a threat occurring multiplied by the potential impact or damage."
+            },
+            {
+              question: "In risk management, what does 'risk tolerance' mean?",
+              options: ["The maximum risk an organization will accept", "The minimum risk level required", "The cost of risk mitigation", "The time needed to assess risk"],
+              correct: 0,
+              explanation: "Risk tolerance is the level of risk that an organization is willing to accept in pursuit of its objectives."
+            },
+            {
+              question: "Which risk treatment strategy involves purchasing cybersecurity insurance?",
+              options: ["Risk avoidance", "Risk mitigation", "Risk transfer", "Risk acceptance"],
+              correct: 2,
+              explanation: "Risk transfer involves shifting the financial impact of risk to another party, such as through insurance policies."
             }
           ]
         }
@@ -202,7 +398,7 @@ export class MemStorage implements IStorage {
       const scenarioRecord: Scenario = { ...scenario, id: index + 1 };
       this.scenarios.set(index + 1, scenarioRecord);
     });
-    this.currentScenarioId = 4;
+    this.currentScenarioId = 9;
 
     // Create user progress
     const progressData = [
