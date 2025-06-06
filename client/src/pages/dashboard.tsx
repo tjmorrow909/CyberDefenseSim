@@ -6,14 +6,53 @@ import LearningStats from "@/components/learning-stats";
 import { useAuth } from "@/hooks/useAuth";
 import { Shield, Star, Flame } from "lucide-react";
 
+interface DashboardData {
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    xp: number;
+    streak: number;
+  };
+  overallProgress: number;
+  domains: Array<{
+    id: number;
+    name: string;
+    progress: number;
+    color: string;
+    icon: string;
+  }>;
+  recentAchievements: Array<{
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+    earnedAt: string;
+  }>;
+  recommendedScenarios: Array<{
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    estimatedTime: number;
+    xpReward: number;
+  }>;
+  stats: {
+    accuracy: number;
+    questionsCompleted: number;
+    studyTime: number;
+    weakestDomain: number | null;
+  };
+}
+
 export default function Dashboard() {
   const { userId } = useAuth();
-  const { data: dashboardData, isLoading } = useQuery({
+  const { data: dashboardData, isLoading, error } = useQuery<DashboardData>({
     queryKey: [`/api/users/${userId}/dashboard`],
     enabled: !!userId,
   });
 
-  if (isLoading || !dashboardData) {
+  if (isLoading) {
     return (
       <div className="flex min-h-screen">
         <div className="w-64 bg-card shadow-lg border-r border-border">
@@ -30,6 +69,19 @@ export default function Dashboard() {
               <div className="h-96 bg-muted rounded animate-pulse"></div>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !dashboardData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Unable to load dashboard</h2>
+          <p className="text-muted-foreground">
+            {error ? "Error loading data. Please try again." : "No data available. Please refresh the page."}
+          </p>
         </div>
       </div>
     );
