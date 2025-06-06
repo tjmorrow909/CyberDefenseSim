@@ -66,7 +66,7 @@ export default function SecurityTools() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar domains={domains || []} />
+      <Sidebar domains={[]} />
       
       <div className="flex-1 ml-64 min-h-screen">
         <header className="bg-card shadow-sm border-b border-border p-4">
