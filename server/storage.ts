@@ -17,12 +17,11 @@ import {
 } from "@shared/schema";
 
 export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUserXP(userId: number, xp: number): Promise<void>;
-  updateUserStreak(userId: number, streak: number): Promise<void>;
+  // User methods (updated for Replit auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  updateUserXP(userId: string, xp: number): Promise<void>;
+  updateUserStreak(userId: string, streak: number): Promise<void>;
 
   // Domain methods
   getAllDomains(): Promise<Domain[]>;
@@ -34,19 +33,19 @@ export interface IStorage {
   getScenario(id: number): Promise<Scenario | undefined>;
 
   // User progress methods
-  getUserProgress(userId: number): Promise<UserProgress[]>;
-  getUserProgressByDomain(userId: number, domainId: number): Promise<UserProgress | undefined>;
-  updateUserProgress(userId: number, domainId: number, progress: Partial<UserProgress>): Promise<void>;
+  getUserProgress(userId: string): Promise<UserProgress[]>;
+  getUserProgressByDomain(userId: string, domainId: number): Promise<UserProgress | undefined>;
+  updateUserProgress(userId: string, domainId: number, progress: Partial<UserProgress>): Promise<void>;
 
   // User scenario methods
-  getUserScenarios(userId: number): Promise<UserScenario[]>;
-  getUserScenario(userId: number, scenarioId: number): Promise<UserScenario | undefined>;
-  updateUserScenario(userId: number, scenarioId: number, data: Partial<UserScenario>): Promise<void>;
+  getUserScenarios(userId: string): Promise<UserScenario[]>;
+  getUserScenario(userId: string, scenarioId: number): Promise<UserScenario | undefined>;
+  updateUserScenario(userId: string, scenarioId: number, data: Partial<UserScenario>): Promise<void>;
 
   // Achievement methods
   getAllAchievements(): Promise<Achievement[]>;
-  getUserAchievements(userId: number): Promise<UserAchievement[]>;
-  awardAchievement(userId: number, achievementId: number): Promise<void>;
+  getUserAchievements(userId: string): Promise<UserAchievement[]>;
+  awardAchievement(userId: string, achievementId: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {

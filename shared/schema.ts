@@ -1,16 +1,30 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Session storage table for authentication
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table for authentication
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
+  id: varchar("id").primaryKey().notNull(), // Changed to varchar for Replit auth
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
   xp: integer("xp").default(0).notNull(),
   streak: integer("streak").default(0).notNull(),
   lastActivity: timestamp("last_activity"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const domains = pgTable("domains", {
@@ -36,7 +50,7 @@ export const scenarios = pgTable("scenarios", {
 
 export const userProgress = pgTable("user_progress", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull(),
+  userId: varchar("user_id").notNull(), // Changed to varchar for Replit auth
   domainId: integer("domain_id").notNull(),
   progress: integer("progress").default(0).notNull(), // percentage 0-100
   questionsCompleted: integer("questions_completed").default(0).notNull(),
@@ -46,7 +60,7 @@ export const userProgress = pgTable("user_progress", {
 
 export const userScenarios = pgTable("user_scenarios", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull(),
+  userId: varchar("user_id").notNull(), // Changed to varchar for Replit auth
   scenarioId: integer("scenario_id").notNull(),
   completed: boolean("completed").default(false).notNull(),
   score: integer("score"), // percentage 0-100
@@ -66,17 +80,14 @@ export const achievements = pgTable("achievements", {
 
 export const userAchievements = pgTable("user_achievements", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull(),
+  userId: varchar("user_id").notNull(), // Changed to varchar for Replit auth
   achievementId: integer("achievement_id").notNull(),
   earnedAt: timestamp("earned_at").defaultNow().notNull(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  firstName: true,
-  lastName: true,
-});
+export const insertUserSchema = createInsertSchema(users);
+
+export type UpsertUser = typeof users.$inferInsert;
 
 export const insertDomainSchema = createInsertSchema(domains).omit({
   id: true,
