@@ -3,14 +3,17 @@ import Sidebar from "@/components/sidebar";
 import ProgressOverview from "@/components/progress-overview";
 import RecommendedActivities from "@/components/recommended-activities";
 import LearningStats from "@/components/learning-stats";
+import { useAuth } from "@/hooks/useAuth";
 import { Shield, Star, Flame } from "lucide-react";
 
 export default function Dashboard() {
+  const { userId } = useAuth();
   const { data: dashboardData, isLoading } = useQuery({
-    queryKey: ["/api/users/1/dashboard"],
+    queryKey: [`/api/users/${userId}/dashboard`],
+    enabled: !!userId,
   });
 
-  if (isLoading) {
+  if (isLoading || !dashboardData) {
     return (
       <div className="flex min-h-screen">
         <div className="w-64 bg-card shadow-lg border-r border-border">
@@ -27,17 +30,6 @@ export default function Dashboard() {
               <div className="h-96 bg-muted rounded animate-pulse"></div>
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!dashboardData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Unable to load dashboard</h2>
-          <p className="text-muted-foreground">Please try refreshing the page.</p>
         </div>
       </div>
     );

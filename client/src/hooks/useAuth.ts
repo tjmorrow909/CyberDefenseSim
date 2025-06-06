@@ -4,7 +4,7 @@ export function useAuth() {
   const userId = localStorage.getItem('userId');
   
   const { data: user, isLoading } = useQuery({
-    queryKey: ["/api/auth/user", userId],
+    queryKey: [`/api/users/${userId}`],
     enabled: !!userId,
     retry: false,
   });
