@@ -18,6 +18,8 @@ interface DashboardData {
   domains: Array<{
     id: number;
     name: string;
+    description: string;
+    examPercentage: number;
     progress: number;
     color: string;
     icon: string;
@@ -34,8 +36,16 @@ interface DashboardData {
     title: string;
     description: string;
     type: string;
+    domainId: number;
+    difficulty: string;
     estimatedTime: number;
     xpReward: number;
+    content: {
+      background: string;
+      scenario: string;
+      codeExample?: string;
+    };
+    domainName: string;
   }>;
   stats: {
     accuracy: number;

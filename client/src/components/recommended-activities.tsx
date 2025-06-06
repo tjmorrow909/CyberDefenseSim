@@ -10,8 +10,15 @@ interface Scenario {
   description: string;
   type: string;
   domainId: number;
+  difficulty: string;
   estimatedTime: number;
   xpReward: number;
+  content: {
+    background: string;
+    scenario: string;
+    codeExample?: string;
+  };
+  domainName: string;
 }
 
 interface RecommendedActivitiesProps {

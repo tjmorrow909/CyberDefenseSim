@@ -5,6 +5,8 @@ import { Progress } from "@/components/ui/progress";
 interface Domain {
   id: number;
   name: string;
+  description: string;
+  examPercentage: number;
   progress: number;
   color: string;
   icon: string;
