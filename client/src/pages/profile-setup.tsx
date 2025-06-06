@@ -52,8 +52,8 @@ export default function ProfileSetup() {
         description: "Welcome to CyberSec Training Platform",
       });
 
-      // Redirect to dashboard
-      window.location.href = "/";
+      // Force page reload to trigger authentication
+      window.location.reload();
       
     } catch (error) {
       console.error("Registration error:", error);
