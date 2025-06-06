@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(240, 10%, 3.9%);
+  --muted: hsl(210, 40%, 98%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(122, 39%, 49%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(33, 100%, 50%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(215, 20%, 65%);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(122, 39%, 49%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(33, 100%, 50%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif;
+  }
+
+  code, pre {
+    font-family: 'Roboto Mono', monospace;
+  }
+}
+
+@layer components {
+  .progress-circle {
+    background: conic-gradient(
+      var(--secondary) 0deg, 
+      var(--secondary) var(--progress, 0deg), 
+      hsl(0, 0%, 88%) var(--progress, 0deg)
+    );
+  }
+  
+  .domain-color-blue {
+    @apply bg-blue-100 text-blue-700;
+  }
+  
+  .domain-color-red {
+    @apply bg-red-100 text-red-700;
+  }
+  
+  .domain-color-purple {
+    @apply bg-purple-100 text-purple-700;
+  }
+  
+  .domain-color-green {
+    @apply bg-green-100 text-green-700;
+  }
+  
+  .domain-color-orange {
+    @apply bg-orange-100 text-orange-700;
+  }
+
+  .progress-bar-blue {
+    @apply bg-blue-500;
+  }
+  
+  .progress-bar-red {
+    @apply bg-red-500;
+  }
+  
+  .progress-bar-purple {
+    @apply bg-purple-500;
+  }
+  
+  .progress-bar-green {
+    @apply bg-green-500;
+  }
+  
+  .progress-bar-orange {
+    @apply bg-orange-500;
+  }
+}
+
+@layer utilities {
+  .animate-progress {
+    animation: progress 2s ease-in-out;
+  }
+  
+  .animate-badge-glow {
+    animation: badge-glow 2s infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes progress {
+  from { width: 0%; }
+}
+
+@keyframes badge-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px hsla(33, 100%, 50%, 0.5); 
+  }
+  50% { 
+    box-shadow: 0 0 20px hsla(33, 100%, 50%, 0.8); 
+  }
+}

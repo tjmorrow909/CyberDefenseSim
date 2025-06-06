@@ -1,0 +1,112 @@
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  xp: integer("xp").default(0).notNull(),
+  streak: integer("streak").default(0).notNull(),
+  lastActivity: timestamp("last_activity"),
+});
+
+export const domains = pgTable("domains", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  examPercentage: integer("exam_percentage").notNull(),
+  color: text("color").notNull(),
+  icon: text("icon").notNull(),
+});
+
+export const scenarios = pgTable("scenarios", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // 'lab', 'scenario', 'challenge'
+  domainId: integer("domain_id").notNull(),
+  difficulty: text("difficulty").notNull(), // 'beginner', 'intermediate', 'advanced'
+  estimatedTime: integer("estimated_time").notNull(), // in minutes
+  xpReward: integer("xp_reward").notNull(),
+  content: jsonb("content").notNull(), // scenario content and questions
+});
+
+export const userProgress = pgTable("user_progress", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  domainId: integer("domain_id").notNull(),
+  progress: integer("progress").default(0).notNull(), // percentage 0-100
+  questionsCompleted: integer("questions_completed").default(0).notNull(),
+  questionsCorrect: integer("questions_correct").default(0).notNull(),
+  timeSpent: integer("time_spent").default(0).notNull(), // in minutes
+});
+
+export const userScenarios = pgTable("user_scenarios", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  scenarioId: integer("scenario_id").notNull(),
+  completed: boolean("completed").default(false).notNull(),
+  score: integer("score"), // percentage 0-100
+  attempts: integer("attempts").default(0).notNull(),
+  timeSpent: integer("time_spent").default(0).notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  icon: text("icon").notNull(),
+  xpReward: integer("xp_reward").notNull(),
+  criteria: jsonb("criteria").notNull(), // conditions for earning the achievement
+});
+
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  achievementId: integer("achievement_id").notNull(),
+  earnedAt: timestamp("earned_at").defaultNow().notNull(),
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+  firstName: true,
+  lastName: true,
+});
+
+export const insertDomainSchema = createInsertSchema(domains).omit({
+  id: true,
+});
+
+export const insertScenarioSchema = createInsertSchema(scenarios).omit({
+  id: true,
+});
+
+export const insertUserProgressSchema = createInsertSchema(userProgress).omit({
+  id: true,
+});
+
+export const insertUserScenarioSchema = createInsertSchema(userScenarios).omit({
+  id: true,
+});
+
+export const insertAchievementSchema = createInsertSchema(achievements).omit({
+  id: true,
+});
+
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+  id: true,
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+export type Domain = typeof domains.$inferSelect;
+export type Scenario = typeof scenarios.$inferSelect;
+export type UserProgress = typeof userProgress.$inferSelect;
+export type UserScenario = typeof userScenarios.$inferSelect;
+export type Achievement = typeof achievements.$inferSelect;
+export type UserAchievement = typeof userAchievements.$inferSelect;
