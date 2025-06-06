@@ -7,7 +7,7 @@ import {
   achievements, 
   userAchievements,
   type User, 
-  type InsertUser,
+  type UpsertUser,
   type Domain,
   type Scenario,
   type UserProgress,
@@ -15,6 +15,8 @@ import {
   type Achievement,
   type UserAchievement
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // User methods (updated for Replit auth)
@@ -46,6 +48,119 @@ export interface IStorage {
   getAllAchievements(): Promise<Achievement[]>;
   getUserAchievements(userId: string): Promise<UserAchievement[]>;
   awardAchievement(userId: string, achievementId: number): Promise<void>;
+}
+
+// Create a simpler memory storage for now, we'll add database integration later
+class SimpleStorage implements IStorage {
+  private users: Map<string, User> = new Map();
+  private memStorage: MemStorage;
+
+  constructor() {
+    this.memStorage = new MemStorage();
+    // Create a default user
+    this.users.set("1", {
+      id: "1",
+      email: "user@example.com",
+      firstName: "Demo",
+      lastName: "User",
+      profileImageUrl: null,
+      xp: 1250,
+      streak: 7,
+      lastActivity: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const user: User = {
+      ...userData,
+      xp: userData.xp || 0,
+      streak: userData.streak || 0,
+      lastActivity: userData.lastActivity || new Date(),
+      createdAt: userData.createdAt || new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(user.id, user);
+    return user;
+  }
+
+  async updateUserXP(userId: string, xp: number): Promise<void> {
+    const user = this.users.get(userId);
+    if (user) {
+      user.xp = xp;
+      user.updatedAt = new Date();
+    }
+  }
+
+  async updateUserStreak(userId: string, streak: number): Promise<void> {
+    const user = this.users.get(userId);
+    if (user) {
+      user.streak = streak;
+      user.updatedAt = new Date();
+    }
+  }
+
+  // Delegate to memory storage for other methods
+  getAllDomains(): Promise<Domain[]> {
+    return this.memStorage.getAllDomains();
+  }
+
+  getDomain(id: number): Promise<Domain | undefined> {
+    return this.memStorage.getDomain(id);
+  }
+
+  getAllScenarios(): Promise<Scenario[]> {
+    return this.memStorage.getAllScenarios();
+  }
+
+  getScenariosByDomain(domainId: number): Promise<Scenario[]> {
+    return this.memStorage.getScenariosByDomain(domainId);
+  }
+
+  getScenario(id: number): Promise<Scenario | undefined> {
+    return this.memStorage.getScenario(id);
+  }
+
+  getUserProgress(userId: string): Promise<UserProgress[]> {
+    return this.memStorage.getUserProgress(userId);
+  }
+
+  getUserProgressByDomain(userId: string, domainId: number): Promise<UserProgress | undefined> {
+    return this.memStorage.getUserProgressByDomain(userId, domainId);
+  }
+
+  updateUserProgress(userId: string, domainId: number, progress: Partial<UserProgress>): Promise<void> {
+    return this.memStorage.updateUserProgress(userId, domainId, progress);
+  }
+
+  getUserScenarios(userId: string): Promise<UserScenario[]> {
+    return this.memStorage.getUserScenarios(userId);
+  }
+
+  getUserScenario(userId: string, scenarioId: number): Promise<UserScenario | undefined> {
+    return this.memStorage.getUserScenario(userId, scenarioId);
+  }
+
+  updateUserScenario(userId: string, scenarioId: number, data: Partial<UserScenario>): Promise<void> {
+    return this.memStorage.updateUserScenario(userId, scenarioId, data);
+  }
+
+  getAllAchievements(): Promise<Achievement[]> {
+    return this.memStorage.getAllAchievements();
+  }
+
+  getUserAchievements(userId: string): Promise<UserAchievement[]> {
+    return this.memStorage.getUserAchievements(userId);
+  }
+
+  awardAchievement(userId: string, achievementId: number): Promise<void> {
+    return this.memStorage.awardAchievement(userId, achievementId);
+  }
 }
 
 export class MemStorage implements IStorage {
@@ -956,4 +1071,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new SimpleStorage();
