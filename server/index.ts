@@ -135,15 +135,26 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 const server = createServer(app);
 const port = 5000;
 
-// Serve static files for the frontend
-app.use(express.static(path.resolve(import.meta.dirname, "..", "client")));
-
-// SPA fallback - serve index.html for all non-API routes
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.resolve(import.meta.dirname, "..", "client", "index.html"));
-  }
-});
+// For development, serve the built frontend files
+if (process.env.NODE_ENV === "development") {
+  // Serve the built frontend from dist/public
+  app.use(express.static(path.resolve(import.meta.dirname, "..", "dist", "public")));
+  
+  // SPA fallback - serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.resolve(import.meta.dirname, "..", "dist", "public", "index.html"));
+    }
+  });
+} else {
+  // Production static serving
+  app.use(express.static(path.resolve(import.meta.dirname, "..", "dist", "public")));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.resolve(import.meta.dirname, "..", "dist", "public", "index.html"));
+    }
+  });
+}
 
 // Start server with explicit host binding
 server.listen(port, '0.0.0.0', () => {
