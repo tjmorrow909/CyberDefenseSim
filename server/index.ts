@@ -2,7 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { storage } from "./storage";
 import { createServer } from "http";
 import path from "path";
-import { setupVite, serveStatic } from "./vite";
+// Temporarily disable Vite integration due to Node.js compatibility issues
+// import { setupVite, serveStatic } from "./vite";
 
 const app = express();
 app.use(express.json());
@@ -134,24 +135,18 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 const server = createServer(app);
 const port = 5000;
 
-// Setup Vite for development or static serving for production
-async function startServer() {
-  try {
-    if (process.env.NODE_ENV === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
+// Serve static files for the frontend
+app.use(express.static(path.resolve(import.meta.dirname, "..", "client")));
 
-    // Start server with explicit host binding
-    server.listen(port, '0.0.0.0', () => {
-      console.log(`[express] serving on port ${port}`);
-      console.log(`Cybersecurity Training Platform ready at http://localhost:${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.resolve(import.meta.dirname, "..", "client", "index.html"));
   }
-}
+});
 
-startServer();
+// Start server with explicit host binding
+server.listen(port, '0.0.0.0', () => {
+  console.log(`[express] serving on port ${port}`);
+  console.log(`Cybersecurity Training Platform ready at http://localhost:${port}`);
+});
