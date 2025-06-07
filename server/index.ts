@@ -133,7 +133,8 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 const server = createServer(app);
 const port = 5000;
 
-// Start server
-server.listen(port, () => {
+// Start server with explicit host binding
+server.listen(port, '0.0.0.0', () => {
   console.log(`[express] serving on port ${port}`);
+  console.log(`Cybersecurity Training Platform ready at http://localhost:${port}`);
 });
