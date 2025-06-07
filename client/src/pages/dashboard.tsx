@@ -58,21 +58,12 @@ interface DashboardData {
 export default function Dashboard() {
   const { userId } = useAuth();
   
-  console.log('Dashboard - userId:', userId, 'enabled:', !!userId);
-  
   const { data: dashboardData, isLoading, error } = useQuery<DashboardData>({
     queryKey: [`/api/users/${userId}/dashboard`],
     enabled: !!userId,
   });
-  
-  console.log('Dashboard query result:', { 
-    isLoading, 
-    error: error?.message, 
-    hasData: !!dashboardData,
-    queryKey: `/api/users/${userId}/dashboard`
-  });
 
-  if (isLoading) {
+  if (isLoading || !dashboardData) {
     return (
       <div className="flex min-h-screen">
         <div className="w-64 bg-card shadow-lg border-r border-border">
@@ -94,13 +85,13 @@ export default function Dashboard() {
     );
   }
 
-  if (error || !dashboardData) {
+  if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-foreground mb-2">Unable to load dashboard</h2>
           <p className="text-muted-foreground">
-            {error ? "Error loading data. Please try again." : "No data available. Please refresh the page."}
+            Error loading data. Please try again.
           </p>
         </div>
       </div>
