@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 console.log('setupTests loaded');
 import '@testing-library/jest-dom';
 

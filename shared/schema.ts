@@ -15,10 +15,11 @@ export const sessions = pgTable(
 
 // User storage table for authentication
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().notNull(), // Changed to varchar for Replit auth
-  email: varchar("email").unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
+  id: varchar("id").primaryKey().notNull(),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  passwordHash: varchar("password_hash"), // For JWT auth users
   profileImageUrl: varchar("profile_image_url"),
   xp: integer("xp").default(0).notNull(),
   streak: integer("streak").default(0).notNull(),
@@ -26,6 +27,18 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+// Refresh tokens table for JWT authentication
+export const refreshTokens = pgTable("refresh_tokens", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  token: varchar("token").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("IDX_refresh_tokens_user_id").on(table.userId),
+  index("IDX_refresh_tokens_token").on(table.token),
+]);
 
 export const domains = pgTable("domains", {
   id: serial("id").primaryKey(),
