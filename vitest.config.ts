@@ -7,11 +7,11 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   test: {
-    environment: 'jsdom', // Ensure jsdom is set for DOM APIs in tests
+    environment: 'jsdom',
     globals: true,
     setupFiles: './client/src/setupTests.ts',
-    include: ['client/src/**/*.test.ts', 'client/src/**/*.test.tsx'],
-    // Fallback: If alias resolution fails, use relative imports in test files.
+    include: ['client/src/**/*.test.ts', 'client/src/**/*.test.tsx', 'server/**/*.test.ts'],
+    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
   },
   resolve: {
     alias: {
@@ -20,5 +20,8 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, 'attached_assets'),
     },
   },
+  esbuild: {
+    jsx: 'automatic'
+  }
 });
 // Architectural Note: For robust test execution, prefer relative imports in test files if you encounter alias issues. See README for details.

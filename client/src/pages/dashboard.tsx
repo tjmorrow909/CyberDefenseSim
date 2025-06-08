@@ -56,11 +56,11 @@ interface DashboardData {
 }
 
 export default function Dashboard() {
-  const { userId } = useAuth();
-  
+  const { user } = useAuth();
+
   const { data: dashboardData, isLoading, error } = useQuery<DashboardData>({
-    queryKey: [`/api/users/${userId}/dashboard`],
-    enabled: !!userId,
+    queryKey: [`/api/users/${user?.id}/dashboard`],
+    enabled: !!user?.id,
   });
 
   if (isLoading || !dashboardData) {

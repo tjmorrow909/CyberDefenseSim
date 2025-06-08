@@ -8,7 +8,8 @@ import Dashboard from "@/pages/dashboard";
 import Domain from "@/pages/domain";
 import Scenario from "@/pages/scenario";
 import SecurityTools from "@/pages/security-tools";
-import ProfileSetup from "@/pages/profile-setup";
+import ThreatsAttacks from "@/pages/threats-attacks";
+import AuthPage from "@/pages/auth";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,7 +27,7 @@ function Router() {
   }
 
   if (!isAuthenticated) {
-    return <ProfileSetup />;
+    return <AuthPage />;
   }
 
   return (
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/domain/:id" component={Domain} />
       <Route path="/scenario/:id" component={Scenario} />
       <Route path="/tools" component={SecurityTools} />
+      <Route path="/threats" component={ThreatsAttacks} />
       <Route component={NotFound} />
     </Switch>
   );

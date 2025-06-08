@@ -126,6 +126,11 @@ export const insertUserAchievementSchema = createInsertSchema(userAchievements).
   id: true,
 });
 
+export const insertRefreshTokenSchema = createInsertSchema(refreshTokens).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Domain = typeof domains.$inferSelect;
@@ -134,3 +139,5 @@ export type UserProgress = typeof userProgress.$inferSelect;
 export type UserScenario = typeof userScenarios.$inferSelect;
 export type Achievement = typeof achievements.$inferSelect;
 export type UserAchievement = typeof userAchievements.$inferSelect;
+export type RefreshToken = typeof refreshTokens.$inferSelect;
+export type InsertRefreshToken = z.infer<typeof insertRefreshTokenSchema>;

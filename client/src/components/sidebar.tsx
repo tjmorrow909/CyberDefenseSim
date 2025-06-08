@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shield, BarChart3, FlaskConical, VenetianMask, ClipboardCheck } from "lucide-react";
+import { Shield, BarChart3, FlaskConical, VenetianMask, ClipboardCheck, AlertTriangle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 interface Domain {
@@ -117,9 +117,23 @@ export default function Sidebar({ domains }: SidebarProps) {
             Quick Actions
           </p>
           <Link href="/tools">
-            <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+            <div className={`flex items-center space-x-3 p-3 rounded-lg transition-colors cursor-pointer ${
+              location === "/tools"
+                ? "bg-muted"
+                : "hover:bg-muted"
+            }`}>
               <FlaskConical className="text-accent w-5 h-5" />
               <span className="text-foreground">Security Tools</span>
+            </div>
+          </Link>
+          <Link href="/threats">
+            <div className={`flex items-center space-x-3 p-3 rounded-lg transition-colors cursor-pointer ${
+              location === "/threats"
+                ? "bg-muted"
+                : "hover:bg-muted"
+            }`}>
+              <AlertTriangle className="text-red-600 w-5 h-5" />
+              <span className="text-foreground">Threats & Attacks</span>
             </div>
           </Link>
           <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer">

@@ -6,6 +6,7 @@ import {
   userScenarios,
   achievements,
   userAchievements,
+  refreshTokens,
   type User,
   type UpsertUser,
   type Domain,
@@ -14,15 +15,25 @@ import {
   type UserScenario,
   type Achievement,
   type UserAchievement,
+  type RefreshToken,
+  type InsertRefreshToken,
 } from "@shared/schema";
 
 // Interface for storage operations
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserXP(userId: string, xp: number): Promise<void>;
   updateUserStreak(userId: string, streak: number): Promise<void>;
+  updateUserActivity(userId: string): Promise<void>;
+
+  // Refresh token operations
+  storeRefreshToken(userId: string, token: string): Promise<void>;
+  getRefreshToken(token: string): Promise<RefreshToken | undefined>;
+  deleteRefreshToken(token: string): Promise<void>;
+  deleteUserRefreshTokens(userId: string): Promise<void>;
 
   // Domain operations
   getAllDomains(): Promise<Domain[]>;
@@ -51,12 +62,14 @@ export interface IStorage {
 
 class SimpleStorage implements IStorage {
   private users: Map<string, User> = new Map();
+  private usersByEmail: Map<string, User> = new Map();
   private domains: Map<number, Domain> = new Map();
   private scenarios: Map<number, Scenario> = new Map();
   private userProgress: Map<string, UserProgress> = new Map();
   private userScenarios: Map<string, UserScenario> = new Map();
   private achievements: Map<number, Achievement> = new Map();
   private userAchievements: Map<string, UserAchievement> = new Map();
+  private refreshTokens: Map<string, RefreshToken> = new Map();
 
   constructor() {
     this.seedData();
@@ -158,12 +171,17 @@ class SimpleStorage implements IStorage {
     return this.users.get(id);
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.usersByEmail.get(email.toLowerCase());
+  }
+
   async upsertUser(userData: UpsertUser): Promise<User> {
     const user: User = {
       id: userData.id,
       email: userData.email || null,
       firstName: userData.firstName || null,
       lastName: userData.lastName || null,
+      passwordHash: userData.passwordHash || null,
       profileImageUrl: userData.profileImageUrl || null,
       xp: userData.xp || 0,
       streak: userData.streak || 0,
@@ -172,6 +190,9 @@ class SimpleStorage implements IStorage {
       updatedAt: new Date(),
     };
     this.users.set(user.id, user);
+    if (user.email) {
+      this.usersByEmail.set(user.email.toLowerCase(), user);
+    }
     return user;
   }
 
@@ -188,6 +209,45 @@ class SimpleStorage implements IStorage {
     if (user) {
       user.streak = streak;
       user.updatedAt = new Date();
+    }
+  }
+
+  async updateUserActivity(userId: string): Promise<void> {
+    const user = this.users.get(userId);
+    if (user) {
+      user.lastActivity = new Date();
+      user.updatedAt = new Date();
+    }
+  }
+
+  // Refresh token operations
+  async storeRefreshToken(userId: string, token: string): Promise<void> {
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days
+
+    const refreshToken: RefreshToken = {
+      id: Date.now(),
+      userId,
+      token,
+      expiresAt,
+      createdAt: new Date(),
+    };
+    this.refreshTokens.set(token, refreshToken);
+  }
+
+  async getRefreshToken(token: string): Promise<RefreshToken | undefined> {
+    return this.refreshTokens.get(token);
+  }
+
+  async deleteRefreshToken(token: string): Promise<void> {
+    this.refreshTokens.delete(token);
+  }
+
+  async deleteUserRefreshTokens(userId: string): Promise<void> {
+    for (const [token, refreshToken] of this.refreshTokens.entries()) {
+      if (refreshToken.userId === userId) {
+        this.refreshTokens.delete(token);
+      }
     }
   }
 
