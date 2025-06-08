@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { AuthenticatedRequest, authenticateToken } from '../auth';
-import { storage } from '../storage';
+import { storage, achievementService } from '../storage';
 import { logger } from '../logger';
 import {
   validateParams,
@@ -250,13 +250,33 @@ router.put('/:id/scenarios/:scenarioId',
 
       await storage.updateUserScenario(userId, scenarioId, req.body);
 
-      // If scenario completed, award XP
+      // If scenario completed, award XP and check achievements
       if (req.body.completed) {
         const scenario = await storage.getScenario(scenarioId);
         if (scenario) {
           const user = await storage.getUser(userId);
           if (user) {
             await storage.updateUserXP(userId, user.xp + scenario.xpReward);
+
+            // Update streak and check achievements
+            await achievementService.updateUserStreak(userId);
+            await achievementService.updateDomainProgress(userId, scenario.domainId);
+
+            const newAchievements = await achievementService.checkAndAwardAchievements(userId, {
+              scenarioCompleted: true,
+              scenarioId,
+              score: req.body.score,
+              timeSpent: req.body.timeSpent
+            });
+
+            return res.json({
+              success: true,
+              message: 'Scenario progress updated successfully',
+              data: {
+                xpAwarded: scenario.xpReward,
+                newAchievements: newAchievements.length
+              }
+            });
           }
         }
       }
@@ -270,6 +290,121 @@ router.put('/:id/scenarios/:scenarioId',
       res.status(500).json({
         success: false,
         message: 'Failed to update scenario progress'
+      });
+    }
+  }
+);
+
+// Get user achievements
+router.get('/:id/achievements', validateParams(userIdParamSchema), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.params.id;
+
+    // Ensure user can only access their own data
+    if (req.user?.id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied'
+      });
+    }
+
+    const stats = await achievementService.getAchievementStats(userId);
+
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    logger.error('Error fetching user achievements', { error: error.message, userId: req.params.id });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch achievements'
+    });
+  }
+});
+
+// Get user progress for all domains
+router.get('/:id/progress', validateParams(userIdParamSchema), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.params.id;
+
+    // Ensure user can only access their own data
+    if (req.user?.id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied'
+      });
+    }
+
+    const progress = await storage.getUserProgress(userId);
+    const domains = await storage.getAllDomains();
+
+    // Calculate overall progress
+    const totalDomains = domains.length;
+    const totalProgress = progress.reduce((sum, p) => sum + p.progress, 0);
+    const overallProgress = totalDomains > 0 ? Math.round(totalProgress / totalDomains) : 0;
+
+    res.json({
+      success: true,
+      data: {
+        overallProgress,
+        domains: progress,
+        totalDomains
+      }
+    });
+  } catch (error) {
+    logger.error('Error fetching user progress', { error: error.message, userId: req.params.id });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch progress'
+    });
+  }
+});
+
+// Get user progress for specific domain
+router.get('/:id/progress/:domainId',
+  validateParams(userIdParamSchema),
+  validateParams(domainIdParamSchema),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.params.id;
+      const domainId = parseInt(req.params.domainId);
+
+      // Ensure user can only access their own data
+      if (req.user?.id !== userId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied'
+        });
+      }
+
+      const progress = await storage.getUserProgressByDomain(userId, domainId);
+      const domain = await storage.getDomain(domainId);
+
+      if (!domain) {
+        return res.status(404).json({
+          success: false,
+          message: 'Domain not found'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: {
+          domain,
+          progress: progress || {
+            progress: 0,
+            questionsCompleted: 0,
+            questionsCorrect: 0,
+            timeSpent: 0
+          }
+        }
+      });
+    } catch (error) {
+      logger.error('Error fetching domain progress', { error: error.message, userId: req.params.id, domainId: req.params.domainId });
+      res.status(500).json({
+        success: false,
+        message: 'Failed to fetch domain progress'
       });
     }
   }

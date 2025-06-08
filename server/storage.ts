@@ -350,4 +350,11 @@ class SimpleStorage implements IStorage {
   }
 }
 
-export const storage = new SimpleStorage();
+import { DatabaseStorage } from './database-storage';
+import { AchievementService } from './achievement-service';
+
+// Use database storage in production, simple storage for development/testing
+const useDatabase = process.env.NODE_ENV === 'production' || process.env.USE_DATABASE === 'true';
+
+export const storage: IStorage = useDatabase ? new DatabaseStorage() : new SimpleStorage();
+export const achievementService = new AchievementService(storage);

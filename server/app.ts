@@ -4,8 +4,12 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { logger } from './logger';
+import { errorHandler, notFoundHandler, setupGlobalErrorHandlers } from './error-handler';
 
 const app = express();
+
+// Setup global error handlers
+setupGlobalErrorHandlers();
 
 // Security middleware
 app.use(helmet({
@@ -113,35 +117,11 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// Error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  logger.error('Unhandled error', {
-    error: err.message,
-    stack: err.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip
-  });
-
-  const status = err.status || err.statusCode || 500;
-  const message = process.env.NODE_ENV === 'production' 
-    ? 'Internal Server Error' 
-    : err.message || 'Internal Server Error';
-
-  res.status(status).json({
-    success: false,
-    message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
-  });
-});
-
 // 404 handler for API routes
-app.use('/api/*', (req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: 'API endpoint not found'
-  });
-});
+app.use('/api/*', notFoundHandler);
+
+// Global error handling middleware (must be last)
+app.use(errorHandler);
 
 // Static file serving
 if (process.env.NODE_ENV === 'production') {
