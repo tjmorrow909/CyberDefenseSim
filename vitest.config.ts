@@ -10,7 +10,7 @@ export default defineConfig({
     environment: 'jsdom', // Ensure jsdom is set for DOM APIs in tests
     globals: true,
     setupFiles: './client/src/setupTests.ts',
-    include: ['client/src/**/*.test.{ts,tsx}'],
+    include: ['client/src/**/*.test.ts', 'client/src/**/*.test.tsx'],
     // Fallback: If alias resolution fails, use relative imports in test files.
   },
   resolve: {
