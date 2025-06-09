@@ -28,8 +28,16 @@ const getErrorMessage = (error: unknown): string => {
 };
 
 export class DatabaseStorage implements IStorage {
+  constructor() {
+    if (!db) {
+      throw new Error('Database not available');
+    }
+  }
+
   // User operations
   async getUser(id: string): Promise<User | undefined> {
+    if (!db) throw new Error('Database not available');
+
     try {
       const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
       return result[0];

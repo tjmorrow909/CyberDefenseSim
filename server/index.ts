@@ -1,34 +1,8 @@
 import { createServer } from 'http';
 import app from './app';
 import { logger } from './logger';
-import { authenticateToken } from './auth';
 import { initializeDatabase, closeDatabaseConnection } from './db';
 import { WebSocketService } from './websocket-service';
-
-// Import route modules
-import authRoutes from './routes/auth';
-import userRoutes from './routes/users';
-import contentRoutes from './routes/content';
-import adminRoutes from './routes/admin';
-
-// Mount routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api', contentRoutes);
-
-// Legacy API compatibility routes (deprecated)
-app.get('/api/users/:id', authenticateToken, async (req, res) => {
-  res.redirect(`/api/users/${req.params.id}`);
-});
-
-app.get('/api/domains', async (req, res) => {
-  res.redirect('/api/domains');
-});
-
-app.get('/api/scenarios', async (req, res) => {
-  res.redirect('/api/scenarios');
-});
 
 // Create HTTP server
 const server = createServer(app);
@@ -78,7 +52,7 @@ async function startServer() {
       });
     });
   } catch (error) {
-    logger.error('Failed to start server', { error: error.message });
+    logger.error('Failed to start server', { error: error instanceof Error ? error.message : String(error) });
     process.exit(1);
   }
 }

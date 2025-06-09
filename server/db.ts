@@ -9,19 +9,31 @@ import path from 'path';
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  logger.error('DATABASE_URL must be set. Did you forget to provision a database?');
-  throw new Error('DATABASE_URL must be set. Did you forget to provision a database?');
+  logger.warn('DATABASE_URL not set. Database features will be disabled.');
 }
 
-// Create postgres client
-const client = postgres(connectionString, {
-  max: 10,
-  idle_timeout: 20,
-  connect_timeout: 10,
-});
+// Create postgres client (only if connection string is available)
+let client: any = null;
+let db: any = null;
 
-// Create drizzle instance
-export const db = drizzle(client, { schema });
+if (connectionString) {
+  try {
+    client = postgres(connectionString, {
+      max: 10,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
+
+    // Create drizzle instance
+    db = drizzle(client, { schema });
+    logger.info('Database client initialized');
+  } catch (error) {
+    logger.error('Failed to initialize database client', { error: error instanceof Error ? error.message : String(error) });
+  }
+}
+
+// Export db (will be null if no database)
+export { db };
 
 // Migration runner
 export async function runMigrations(): Promise<void> {
@@ -63,40 +75,55 @@ export async function runMigrations(): Promise<void> {
 
     logger.info('All migrations completed successfully');
   } catch (error) {
-    logger.error('Migration failed', { error: error.message });
+    logger.error('Migration failed', { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 }
 
 // Database health check
 export async function checkDatabaseConnection(): Promise<boolean> {
+  if (!client) {
+    logger.warn('Database client not available');
+    return false;
+  }
+
   try {
     await client`SELECT 1`;
     logger.info('Database connection successful');
     return true;
   } catch (error) {
-    logger.error('Database connection failed', { error: error.message });
+    logger.error('Database connection failed', { error: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }
 
 // Graceful shutdown
 export async function closeDatabaseConnection(): Promise<void> {
+  if (!client) {
+    return;
+  }
+
   try {
     await client.end();
     logger.info('Database connection closed');
   } catch (error) {
-    logger.error('Error closing database connection', { error: error.message });
+    logger.error('Error closing database connection', { error: error instanceof Error ? error.message : String(error) });
   }
 }
 
 // Initialize database
 export async function initializeDatabase(): Promise<void> {
+  if (!connectionString) {
+    logger.warn('Skipping database initialization - no DATABASE_URL provided');
+    return;
+  }
+
   try {
     // Check connection
     const isConnected = await checkDatabaseConnection();
     if (!isConnected) {
-      throw new Error('Failed to connect to database');
+      logger.warn('Database connection failed, continuing without database');
+      return;
     }
 
     // Run migrations
@@ -104,7 +131,7 @@ export async function initializeDatabase(): Promise<void> {
 
     logger.info('Database initialization completed');
   } catch (error) {
-    logger.error('Database initialization failed', { error: error.message });
-    throw error;
+    logger.error('Database initialization failed', { error: error instanceof Error ? error.message : String(error) });
+    logger.warn('Continuing without database functionality');
   }
 }

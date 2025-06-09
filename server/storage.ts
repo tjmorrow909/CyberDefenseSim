@@ -387,9 +387,21 @@ class SimpleStorage implements IStorage {
 
 import { DatabaseStorage } from './database-storage';
 import { AchievementService } from './achievement-service';
+import { db } from './db';
 
-// Use database storage in production, simple storage for development/testing
-const useDatabase = process.env.NODE_ENV === 'production' || process.env.USE_DATABASE === 'true';
+// Use database storage only if database is available, otherwise use simple storage
+let storage: IStorage;
 
-export const storage: IStorage = useDatabase ? new DatabaseStorage() : new SimpleStorage();
+try {
+  if (db && (process.env.NODE_ENV === 'production' || process.env.USE_DATABASE === 'true')) {
+    storage = new DatabaseStorage();
+  } else {
+    storage = new SimpleStorage();
+  }
+} catch (error) {
+  console.warn('Failed to initialize database storage, falling back to simple storage:', error);
+  storage = new SimpleStorage();
+}
+
+export { storage };
 export const achievementService = new AchievementService(storage);

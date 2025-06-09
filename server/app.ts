@@ -5,6 +5,13 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { logger } from './logger';
 import { errorHandler, notFoundHandler, setupGlobalErrorHandlers } from './error-handler';
+import { authenticateToken } from './auth';
+
+// Import route modules
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
+import contentRoutes from './routes/content';
+import adminRoutes from './routes/admin';
 
 const app = express();
 
@@ -20,7 +27,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:', 'https:'],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://replit.com'],
         connectSrc: ["'self'", 'ws:', 'wss:'],
       },
     },
@@ -119,24 +126,59 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
+// Mount API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', contentRoutes);
+
+// Legacy API compatibility routes (deprecated)
+app.get('/api/users/:id', authenticateToken, async (req, res) => {
+  res.redirect(`/api/users/${req.params.id}`);
+});
+
+app.get('/api/domains', async (req, res) => {
+  res.redirect('/api/domains');
+});
+
+app.get('/api/scenarios', async (req, res) => {
+  res.redirect('/api/scenarios');
+});
+
 // 404 handler for API routes
 app.use('/api/*', notFoundHandler);
 
 // Global error handling middleware (must be last)
 app.use(errorHandler);
 
-// Static file serving
+// Static file serving with proper MIME types
+const staticOptions = {
+  setHeaders: (res: Response, filePath: string) => {
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (filePath.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json');
+    }
+  },
+  maxAge: process.env.NODE_ENV === 'production' ? '1y' : '0',
+};
+
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.resolve(process.cwd(), 'dist', 'public')));
+  const publicPath = path.resolve(process.cwd(), 'dist', 'public');
+  app.use(express.static(publicPath, staticOptions));
 
   // SPA fallback
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(process.cwd(), 'dist', 'public', 'index.html'));
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.resolve(publicPath, 'index.html'));
+    }
   });
 } else {
   // Development static serving
   const distPath = path.resolve(process.cwd(), 'dist', 'public');
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, staticOptions));
 
   app.get('*', (req: Request, res: Response) => {
     if (!req.path.startsWith('/api')) {
