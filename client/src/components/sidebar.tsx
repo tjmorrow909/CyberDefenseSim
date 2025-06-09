@@ -1,6 +1,5 @@
 import { Link, useLocation } from "wouter";
 import { Shield, BarChart3, FlaskConical, VenetianMask, ClipboardCheck, AlertTriangle } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 
 interface Domain {
   id: number;
@@ -19,16 +18,7 @@ interface SidebarProps {
 export default function Sidebar({ domains }: SidebarProps) {
   const [location] = useLocation();
 
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case "shield-alt": return <Shield className="w-4 h-4" />;
-      case "bug": return <FlaskConical className="w-4 h-4" />;
-      case "network-wired": return <BarChart3 className="w-4 h-4" />;
-      case "shield-virus": return <VenetianMask className="w-4 h-4" />;
-      case "clipboard-check": return <ClipboardCheck className="w-4 h-4" />;
-      default: return <Shield className="w-4 h-4" />;
-    }
-  };
+
 
   const getColorClasses = (color: string) => {
     switch (color) {

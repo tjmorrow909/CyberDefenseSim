@@ -229,7 +229,7 @@ describe('ThreatsAttacks Page', () => {
     // Mock attack simulation
     let simulationActive = false;
     
-    const simulateAttack = (attackId: string) => {
+    const simulateAttack = (_attackId: string) => {
       simulationActive = true;
       setTimeout(() => {
         simulationActive = false;

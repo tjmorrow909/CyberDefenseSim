@@ -12,20 +12,13 @@ import {
   AlertTriangle, 
   Bug, 
   Zap, 
-  Globe, 
-  Users, 
-  Database, 
+  Globe,
+  Users,
   Network,
   ArrowLeft,
-  Eye,
   Target,
   Skull,
   Lock,
-  Unlock,
-  FileX,
-  Mail,
-  Phone,
-  CreditCard,
   Wifi
 } from "lucide-react";
 import { Link } from "wouter";

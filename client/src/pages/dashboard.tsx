@@ -4,7 +4,7 @@ import ProgressOverview from "@/components/progress-overview";
 import RecommendedActivities from "@/components/recommended-activities";
 import LearningStats from "@/components/learning-stats";
 import { useAuth } from "@/hooks/useAuth";
-import { Shield, Star, Flame } from "lucide-react";
+import { Star, Flame } from "lucide-react";
 
 interface DashboardData {
   user: {

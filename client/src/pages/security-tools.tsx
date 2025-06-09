@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import Sidebar from "@/components/sidebar";
 import VulnerabilityScanner from "@/components/vulnerability-scanner";
 import ThreatIntelligence from "@/components/threat-intelligence";
@@ -12,7 +12,7 @@ import { ArrowLeft, Shield, Search, Globe, Key, Terminal, Network, FileSearch } 
 import { Link } from "wouter";
 
 export default function SecurityTools() {
-  const { data: domains } = useQuery({
+  const { data: _domains } = useQuery({
     queryKey: ["/api/domains"],
   });
 

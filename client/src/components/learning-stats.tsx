@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { CheckCircle, Clock, Target, Lightbulb } from "lucide-react";
+import { CheckCircle, Target, Lightbulb } from "lucide-react";
 
 interface Stats {
   accuracy: number;
