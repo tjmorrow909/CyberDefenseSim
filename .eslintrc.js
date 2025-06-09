@@ -1,3 +1,5 @@
+// Legacy .eslintrc.js - This file is deprecated in ESLint v9+
+// The new configuration is in eslint.config.js
 module.exports = {
   root: true,
   env: {
