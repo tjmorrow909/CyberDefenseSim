@@ -21,7 +21,7 @@ export default defineConfig({
     },
   },
   esbuild: {
-    jsx: 'automatic'
-  }
+    jsx: 'automatic',
+  },
 });
 // Architectural Note: For robust test execution, prefer relative imports in test files if you encounter alias issues. See README for details.

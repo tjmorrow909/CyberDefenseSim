@@ -5,7 +5,7 @@ const mockUser = {
   id: 'test-user-123',
   email: 'test@example.com',
   firstName: 'Test',
-  lastName: 'User'
+  lastName: 'User',
 };
 
 vi.mock('@/hooks/useAuth', () => ({
@@ -27,9 +27,7 @@ vi.mock('@tanstack/react-query', () => ({
 
 // Mock wouter
 vi.mock('wouter', () => ({
-  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
 }));
 
 // Mock sidebar component
@@ -46,11 +44,11 @@ describe('ThreatsAttacks Page', () => {
     // Test threat category data structure
     const expectedThreatCategories = [
       'malware',
-      'social-engineering', 
+      'social-engineering',
       'application-attacks',
       'network-attacks',
       'physical-attacks',
-      'wireless-attacks'
+      'wireless-attacks',
     ];
 
     // This would be tested by importing the component and checking its data
@@ -61,11 +59,7 @@ describe('ThreatsAttacks Page', () => {
 
   it('should have attack vectors defined', () => {
     // Test attack vector data structure
-    const expectedAttackVectors = [
-      'sql-injection',
-      'phishing',
-      'ddos'
-    ];
+    const expectedAttackVectors = ['sql-injection', 'phishing', 'ddos'];
 
     expect(expectedAttackVectors).toHaveLength(3);
     expect(expectedAttackVectors).toContain('sql-injection');
@@ -74,7 +68,7 @@ describe('ThreatsAttacks Page', () => {
 
   it('should categorize threats by severity', () => {
     const severityLevels = ['Critical', 'High', 'Medium', 'Low'];
-    
+
     severityLevels.forEach(severity => {
       expect(['Critical', 'High', 'Medium', 'Low']).toContain(severity);
     });
@@ -82,7 +76,7 @@ describe('ThreatsAttacks Page', () => {
 
   it('should categorize attacks by difficulty', () => {
     const difficultyLevels = ['Beginner', 'Intermediate', 'Advanced'];
-    
+
     difficultyLevels.forEach(difficulty => {
       expect(['Beginner', 'Intermediate', 'Advanced']).toContain(difficulty);
     });
@@ -96,7 +90,7 @@ describe('ThreatsAttacks Page', () => {
       'Network segmentation',
       'Encryption',
       'Access controls',
-      'Regular updates'
+      'Regular updates',
     ];
 
     commonMitigations.forEach(mitigation => {
@@ -118,8 +112,8 @@ describe('ThreatsAttacks Page', () => {
         title: 'WannaCry Ransomware',
         description: 'Global ransomware attack',
         impact: 'Disrupted healthcare systems',
-        year: '2017'
-      }
+        year: '2017',
+      },
     };
 
     expect(mockThreat.id).toBe('malware');
@@ -140,7 +134,7 @@ describe('ThreatsAttacks Page', () => {
       difficulty: 'Intermediate',
       steps: ['Identify input fields', 'Test for vulnerabilities'],
       prevention: ['Use parameterized queries', 'Input validation'],
-      tools: ['SQLMap', 'Burp Suite']
+      tools: ['SQLMap', 'Burp Suite'],
     };
 
     expect(mockAttack.id).toBe('sql-injection');
@@ -153,11 +147,16 @@ describe('ThreatsAttacks Page', () => {
   it('should have proper color coding for severity levels', () => {
     const getSeverityColor = (severity: string) => {
       switch (severity) {
-        case "Critical": return "bg-red-500 text-white";
-        case "High": return "bg-orange-500 text-white";
-        case "Medium": return "bg-yellow-500 text-black";
-        case "Low": return "bg-green-500 text-white";
-        default: return "bg-gray-500 text-white";
+        case 'Critical':
+          return 'bg-red-500 text-white';
+        case 'High':
+          return 'bg-orange-500 text-white';
+        case 'Medium':
+          return 'bg-yellow-500 text-black';
+        case 'Low':
+          return 'bg-green-500 text-white';
+        default:
+          return 'bg-gray-500 text-white';
       }
     };
 
@@ -170,10 +169,14 @@ describe('ThreatsAttacks Page', () => {
   it('should have proper color coding for difficulty levels', () => {
     const getDifficultyColor = (difficulty: string) => {
       switch (difficulty) {
-        case "Advanced": return "bg-red-500 text-white";
-        case "Intermediate": return "bg-yellow-500 text-black";
-        case "Beginner": return "bg-green-500 text-white";
-        default: return "bg-gray-500 text-white";
+        case 'Advanced':
+          return 'bg-red-500 text-white';
+        case 'Intermediate':
+          return 'bg-yellow-500 text-black';
+        case 'Beginner':
+          return 'bg-green-500 text-white';
+        default:
+          return 'bg-gray-500 text-white';
       }
     };
 
@@ -185,11 +188,11 @@ describe('ThreatsAttacks Page', () => {
   it('should validate defense in depth layers', () => {
     const defenseInDepthLayers = [
       'Perimeter Security',
-      'Network Security', 
+      'Network Security',
       'Endpoint Security',
       'Application Security',
       'Data Security',
-      'User Security'
+      'User Security',
     ];
 
     expect(defenseInDepthLayers).toHaveLength(6);
@@ -201,10 +204,10 @@ describe('ThreatsAttacks Page', () => {
     const incidentResponsePhases = [
       'Preparation',
       'Identification',
-      'Containment', 
+      'Containment',
       'Eradication',
       'Recovery',
-      'Lessons Learned'
+      'Lessons Learned',
     ];
 
     expect(incidentResponsePhases).toHaveLength(6);
@@ -213,11 +216,7 @@ describe('ThreatsAttacks Page', () => {
   });
 
   it('should validate security control types', () => {
-    const securityControlTypes = [
-      'Preventive Controls',
-      'Detective Controls',
-      'Corrective Controls'
-    ];
+    const securityControlTypes = ['Preventive Controls', 'Detective Controls', 'Corrective Controls'];
 
     expect(securityControlTypes).toHaveLength(3);
     expect(securityControlTypes).toContain('Preventive Controls');
@@ -228,7 +227,7 @@ describe('ThreatsAttacks Page', () => {
   it('should simulate attack progression', () => {
     // Mock attack simulation
     let simulationActive = false;
-    
+
     const simulateAttack = (_attackId: string) => {
       simulationActive = true;
       setTimeout(() => {
@@ -238,7 +237,7 @@ describe('ThreatsAttacks Page', () => {
 
     simulateAttack('sql-injection');
     expect(simulationActive).toBe(true);
-    
+
     // Wait for simulation to complete
     setTimeout(() => {
       expect(simulationActive).toBe(false);
@@ -251,14 +250,14 @@ describe('ThreatsAttacks Page', () => {
         title: 'WannaCry Ransomware (2017)',
         description: 'Global ransomware attack',
         impact: 'Disrupted healthcare systems',
-        year: '2017'
+        year: '2017',
       },
       {
         title: 'Target Data Breach (2013)',
         description: 'Spear phishing attack',
         impact: '40 million credit card numbers stolen',
-        year: '2013'
-      }
+        year: '2013',
+      },
     ];
 
     realWorldExamples.forEach(example => {
@@ -275,10 +274,10 @@ describe('ThreatsAttacks Page', () => {
     // Validate that each threat category has sufficient examples
     const malwareExamples = ['Viruses', 'Worms', 'Trojans', 'Ransomware', 'Spyware'];
     const socialEngineeringExamples = ['Phishing', 'Spear phishing', 'Whaling', 'Vishing'];
-    
+
     expect(malwareExamples.length).toBeGreaterThanOrEqual(4);
     expect(socialEngineeringExamples.length).toBeGreaterThanOrEqual(3);
-    
+
     malwareExamples.forEach(example => {
       expect(typeof example).toBe('string');
       expect(example.length).toBeGreaterThan(0);

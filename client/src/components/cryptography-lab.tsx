@@ -1,28 +1,28 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Key, Lock, Unlock, Eye, EyeOff } from "lucide-react";
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Key, Lock, Unlock, Eye, EyeOff } from 'lucide-react';
 
 export default function CryptographyLab() {
-  const [vigenereKey, setVigenereKey] = useState("APPLE");
-  const [vigenereText, setVigenereText] = useState("SECRET MESSAGE");
-  const [vigenereResult, setVigenereResult] = useState("");
+  const [vigenereKey, setVigenereKey] = useState('APPLE');
+  const [vigenereText, setVigenereText] = useState('SECRET MESSAGE');
+  const [vigenereResult, setVigenereResult] = useState('');
   const [caesarShift, setCaesarShift] = useState(3);
-  const [caesarText, setCaesarText] = useState("HELLO WORLD");
-  const [caesarResult, setCaesarResult] = useState("");
+  const [caesarText, setCaesarText] = useState('HELLO WORLD');
+  const [caesarResult, setCaesarResult] = useState('');
   const [showVigenereTable, setShowVigenereTable] = useState(false);
 
   // Vigenère cipher implementation
   const vigenereEncrypt = (text: string, key: string): string => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    text = text.toUpperCase().replace(/[^A-Z]/g, "");
-    key = key.toUpperCase().replace(/[^A-Z]/g, "");
-    let result = "";
-    
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    text = text.toUpperCase().replace(/[^A-Z]/g, '');
+    key = key.toUpperCase().replace(/[^A-Z]/g, '');
+    let result = '';
+
     for (let i = 0; i < text.length; i++) {
       const textChar = text[i];
       const keyChar = key[i % key.length];
@@ -31,16 +31,16 @@ export default function CryptographyLab() {
       const encryptedIndex = (textIndex + keyIndex) % 26;
       result += alphabet[encryptedIndex];
     }
-    
+
     return result;
   };
 
   const vigenereDecrypt = (text: string, key: string): string => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    text = text.toUpperCase().replace(/[^A-Z]/g, "");
-    key = key.toUpperCase().replace(/[^A-Z]/g, "");
-    let result = "";
-    
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    text = text.toUpperCase().replace(/[^A-Z]/g, '');
+    key = key.toUpperCase().replace(/[^A-Z]/g, '');
+    let result = '';
+
     for (let i = 0; i < text.length; i++) {
       const textChar = text[i];
       const keyChar = key[i % key.length];
@@ -49,22 +49,22 @@ export default function CryptographyLab() {
       const decryptedIndex = (textIndex - keyIndex + 26) % 26;
       result += alphabet[decryptedIndex];
     }
-    
+
     return result;
   };
 
   // Caesar cipher implementation
   const caesarEncrypt = (text: string, shift: number): string => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    text = text.toUpperCase().replace(/[^A-Z]/g, "");
-    let result = "";
-    
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    text = text.toUpperCase().replace(/[^A-Z]/g, '');
+    let result = '';
+
     for (const char of text) {
       const index = alphabet.indexOf(char);
       const newIndex = (index + shift) % 26;
       result += alphabet[newIndex];
     }
-    
+
     return result;
   };
 
@@ -72,16 +72,16 @@ export default function CryptographyLab() {
     return caesarEncrypt(text, -shift);
   };
 
-  const performVigenereOperation = (operation: "encrypt" | "decrypt") => {
-    if (operation === "encrypt") {
+  const performVigenereOperation = (operation: 'encrypt' | 'decrypt') => {
+    if (operation === 'encrypt') {
       setVigenereResult(vigenereEncrypt(vigenereText, vigenereKey));
     } else {
       setVigenereResult(vigenereDecrypt(vigenereText, vigenereKey));
     }
   };
 
-  const performCaesarOperation = (operation: "encrypt" | "decrypt") => {
-    if (operation === "encrypt") {
+  const performCaesarOperation = (operation: 'encrypt' | 'decrypt') => {
+    if (operation === 'encrypt') {
       setCaesarResult(caesarEncrypt(caesarText, caesarShift));
     } else {
       setCaesarResult(caesarDecrypt(caesarText, caesarShift));
@@ -89,9 +89,9 @@ export default function CryptographyLab() {
   };
 
   const generateVigenereTable = () => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const table = [];
-    
+
     for (let i = 0; i < 26; i++) {
       const row = [];
       for (let j = 0; j < 26; j++) {
@@ -99,7 +99,7 @@ export default function CryptographyLab() {
       }
       table.push(row);
     }
-    
+
     return table;
   };
 
@@ -137,7 +137,7 @@ export default function CryptographyLab() {
                       <Input
                         id="vigenere-key"
                         value={vigenereKey}
-                        onChange={(e) => setVigenereKey(e.target.value)}
+                        onChange={e => setVigenereKey(e.target.value)}
                         placeholder="Enter keyword (e.g., APPLE)"
                       />
                     </div>
@@ -146,36 +146,31 @@ export default function CryptographyLab() {
                       <Input
                         id="vigenere-text"
                         value={vigenereText}
-                        onChange={(e) => setVigenereText(e.target.value)}
+                        onChange={e => setVigenereText(e.target.value)}
                         placeholder="Enter text to encrypt/decrypt"
                       />
                     </div>
                   </div>
 
                   <div className="flex space-x-2">
-                    <Button onClick={() => performVigenereOperation("encrypt")}>
+                    <Button onClick={() => performVigenereOperation('encrypt')}>
                       <Lock className="w-4 h-4 mr-2" />
                       Encrypt
                     </Button>
-                    <Button variant="outline" onClick={() => performVigenereOperation("decrypt")}>
+                    <Button variant="outline" onClick={() => performVigenereOperation('decrypt')}>
                       <Unlock className="w-4 h-4 mr-2" />
                       Decrypt
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      onClick={() => setShowVigenereTable(!showVigenereTable)}
-                    >
+                    <Button variant="ghost" onClick={() => setShowVigenereTable(!showVigenereTable)}>
                       {showVigenereTable ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                      {showVigenereTable ? "Hide" : "Show"} Table
+                      {showVigenereTable ? 'Hide' : 'Show'} Table
                     </Button>
                   </div>
 
                   {vigenereResult && (
                     <div>
                       <Label>Result</Label>
-                      <div className="bg-muted p-3 rounded-lg font-mono text-lg">
-                        {vigenereResult}
-                      </div>
+                      <div className="bg-muted p-3 rounded-lg font-mono text-lg">{vigenereResult}</div>
                     </div>
                   )}
 
@@ -197,9 +192,7 @@ export default function CryptographyLab() {
                           <tbody>
                             {vigenereTable.map((row, i) => (
                               <tr key={i}>
-                                <th className="border border-border p-1 bg-muted">
-                                  {String.fromCharCode(65 + i)}
-                                </th>
+                                <th className="border border-border p-1 bg-muted">{String.fromCharCode(65 + i)}</th>
                                 {row.map((cell, j) => (
                                   <td key={j} className="border border-border p-1 text-center">
                                     {cell}
@@ -232,7 +225,7 @@ export default function CryptographyLab() {
                         id="caesar-shift"
                         type="number"
                         value={caesarShift}
-                        onChange={(e) => setCaesarShift(parseInt(e.target.value) || 0)}
+                        onChange={e => setCaesarShift(parseInt(e.target.value) || 0)}
                         min="1"
                         max="25"
                       />
@@ -242,18 +235,18 @@ export default function CryptographyLab() {
                       <Input
                         id="caesar-text"
                         value={caesarText}
-                        onChange={(e) => setCaesarText(e.target.value)}
+                        onChange={e => setCaesarText(e.target.value)}
                         placeholder="Enter text to encrypt/decrypt"
                       />
                     </div>
                   </div>
 
                   <div className="flex space-x-2">
-                    <Button onClick={() => performCaesarOperation("encrypt")}>
+                    <Button onClick={() => performCaesarOperation('encrypt')}>
                       <Lock className="w-4 h-4 mr-2" />
                       Encrypt
                     </Button>
-                    <Button variant="outline" onClick={() => performCaesarOperation("decrypt")}>
+                    <Button variant="outline" onClick={() => performCaesarOperation('decrypt')}>
                       <Unlock className="w-4 h-4 mr-2" />
                       Decrypt
                     </Button>
@@ -262,17 +255,13 @@ export default function CryptographyLab() {
                   {caesarResult && (
                     <div>
                       <Label>Result</Label>
-                      <div className="bg-muted p-3 rounded-lg font-mono text-lg">
-                        {caesarResult}
-                      </div>
+                      <div className="bg-muted p-3 rounded-lg font-mono text-lg">{caesarResult}</div>
                     </div>
                   )}
 
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                     <h4 className="font-semibold mb-2">Caesar Cipher Example</h4>
-                    <p className="text-sm text-muted-foreground">
-                      With shift 3: A→D, B→E, C→F... X→A, Y→B, Z→C
-                    </p>
+                    <p className="text-sm text-muted-foreground">With shift 3: A→D, B→E, C→F... X→A, Y→B, Z→C</p>
                   </div>
                 </CardContent>
               </Card>
@@ -292,7 +281,7 @@ export default function CryptographyLab() {
                       </p>
                       <Badge variant="outline">Classical Cryptography</Badge>
                     </Card>
-                    
+
                     <Card className="p-4">
                       <h4 className="font-semibold mb-2">Kasiski Examination</h4>
                       <p className="text-sm text-muted-foreground mb-3">
@@ -300,7 +289,7 @@ export default function CryptographyLab() {
                       </p>
                       <Badge variant="outline">Polyalphabetic Analysis</Badge>
                     </Card>
-                    
+
                     <Card className="p-4">
                       <h4 className="font-semibold mb-2">Index of Coincidence</h4>
                       <p className="text-sm text-muted-foreground mb-3">
@@ -308,12 +297,10 @@ export default function CryptographyLab() {
                       </p>
                       <Badge variant="outline">Statistical Analysis</Badge>
                     </Card>
-                    
+
                     <Card className="p-4">
                       <h4 className="font-semibold mb-2">Brute Force</h4>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Try all possible keys systematically.
-                      </p>
+                      <p className="text-sm text-muted-foreground mb-3">Try all possible keys systematically.</p>
                       <Badge variant="outline">Computational Method</Badge>
                     </Card>
                   </div>

@@ -1,4 +1,4 @@
-import { Shield, Flame, Bug } from "lucide-react";
+import { Shield, Flame, Bug } from 'lucide-react';
 
 interface Domain {
   id: number;
@@ -25,30 +25,44 @@ interface ProgressOverviewProps {
 export default function ProgressOverview({ overallProgress, domains, recentAchievements }: ProgressOverviewProps) {
   const getProgressBarColor = (color: string) => {
     switch (color) {
-      case "blue": return "bg-blue-500";
-      case "red": return "bg-red-500";
-      case "purple": return "bg-purple-500";
-      case "green": return "bg-green-500";
-      case "orange": return "bg-orange-500";
-      default: return "bg-gray-500";
+      case 'blue':
+        return 'bg-blue-500';
+      case 'red':
+        return 'bg-red-500';
+      case 'purple':
+        return 'bg-purple-500';
+      case 'green':
+        return 'bg-green-500';
+      case 'orange':
+        return 'bg-orange-500';
+      default:
+        return 'bg-gray-500';
     }
   };
 
   const getAchievementIcon = (iconName: string) => {
     switch (iconName) {
-      case "shield-alt": return <Shield className="text-white" />;
-      case "fire": return <Flame className="text-white" />;
-      case "bug": return <Bug className="text-white" />;
-      default: return <Shield className="text-white" />;
+      case 'shield-alt':
+        return <Shield className="text-white" />;
+      case 'fire':
+        return <Flame className="text-white" />;
+      case 'bug':
+        return <Bug className="text-white" />;
+      default:
+        return <Shield className="text-white" />;
     }
   };
 
   const getAchievementBgColor = (iconName: string) => {
     switch (iconName) {
-      case "shield-alt": return "bg-secondary";
-      case "fire": return "bg-accent";
-      case "bug": return "bg-purple-500";
-      default: return "bg-primary";
+      case 'shield-alt':
+        return 'bg-secondary';
+      case 'fire':
+        return 'bg-accent';
+      case 'bug':
+        return 'bg-purple-500';
+      default:
+        return 'bg-primary';
     }
   };
 
@@ -63,7 +77,7 @@ export default function ProgressOverview({ overallProgress, domains, recentAchie
             <h3 className="text-lg font-semibold text-foreground">Learning Progress</h3>
             <p className="text-muted-foreground">CompTIA Security+ SY0-701 Preparation</p>
           </div>
-          <div 
+          <div
             className="w-20 h-20 rounded-full progress-circle flex items-center justify-center"
             style={{ '--progress': `${progressDegrees}deg` } as any}
           >
@@ -75,7 +89,7 @@ export default function ProgressOverview({ overallProgress, domains, recentAchie
 
         {/* Domain Progress Bars */}
         <div className="space-y-4">
-          {domains.map((domain) => (
+          {domains.map(domain => (
             <div key={domain.id}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -87,7 +101,7 @@ export default function ProgressOverview({ overallProgress, domains, recentAchie
                 </span>
               </div>
               <div className="w-full bg-muted rounded-full h-2 mt-2">
-                <div 
+                <div
                   className={`h-2 rounded-full transition-all duration-1000 ${getProgressBarColor(domain.color)}`}
                   style={{ width: `${domain.progress}%` }}
                 />
@@ -101,9 +115,11 @@ export default function ProgressOverview({ overallProgress, domains, recentAchie
       <div className="bg-card rounded-xl shadow-sm border border-border p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Recent Achievements</h3>
         <div className="space-y-4">
-          {recentAchievements.map((achievement) => (
+          {recentAchievements.map(achievement => (
             <div key={achievement.id} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
-              <div className={`w-12 h-12 ${getAchievementBgColor(achievement.icon)} rounded-lg flex items-center justify-center`}>
+              <div
+                className={`w-12 h-12 ${getAchievementBgColor(achievement.icon)} rounded-lg flex items-center justify-center`}
+              >
                 {getAchievementIcon(achievement.icon)}
               </div>
               <div>
@@ -112,7 +128,7 @@ export default function ProgressOverview({ overallProgress, domains, recentAchie
               </div>
             </div>
           ))}
-          
+
           {recentAchievements.length === 0 && (
             <div className="text-center text-muted-foreground py-8">
               <Shield className="w-12 h-12 mx-auto mb-3 opacity-50" />

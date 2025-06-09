@@ -14,13 +14,16 @@ interface AchievementCriteria {
 export class AchievementService {
   constructor(private storage: IStorage) {}
 
-  async checkAndAwardAchievements(userId: string, context?: {
-    scenarioCompleted?: boolean;
-    scenarioId?: number;
-    score?: number;
-    timeSpent?: number;
-    domainProgress?: { domainId: number; progress: number };
-  }): Promise<number[]> {
+  async checkAndAwardAchievements(
+    userId: string,
+    context?: {
+      scenarioCompleted?: boolean;
+      scenarioId?: number;
+      score?: number;
+      timeSpent?: number;
+      domainProgress?: { domainId: number; progress: number };
+    }
+  ): Promise<number[]> {
     try {
       const awardedAchievements: number[] = [];
       const achievements = await this.storage.getAllAchievements();
@@ -39,10 +42,10 @@ export class AchievementService {
         if (shouldAward) {
           await this.storage.awardAchievement(userId, achievement.id);
           awardedAchievements.push(achievement.id);
-          logger.info('Achievement awarded', { 
-            userId, 
-            achievementId: achievement.id, 
-            achievementName: achievement.name 
+          logger.info('Achievement awarded', {
+            userId,
+            achievementId: achievement.id,
+            achievementName: achievement.name,
           });
         }
       }
@@ -55,7 +58,7 @@ export class AchievementService {
   }
 
   private async checkAchievementCriteria(
-    userId: string, 
+    userId: string,
     criteria: AchievementCriteria,
     context?: any
   ): Promise<boolean> {
@@ -125,31 +128,29 @@ export class AchievementService {
     try {
       const scenarios = await this.storage.getAllScenarios();
       const userScenarios = await this.storage.getUserScenarios(userId);
-      const userCompletedIds = new Set(
-        userScenarios.filter(us => us.completed).map(us => us.scenarioId)
-      );
+      const userCompletedIds = new Set(userScenarios.filter(us => us.completed).map(us => us.scenarioId));
 
       let categoryScenarios: number[] = [];
 
       switch (category) {
         case 'vulnerability':
           categoryScenarios = scenarios
-            .filter(s => s.title.toLowerCase().includes('vulnerability') || 
-                        s.description.toLowerCase().includes('vulnerability'))
+            .filter(
+              s =>
+                s.title.toLowerCase().includes('vulnerability') || s.description.toLowerCase().includes('vulnerability')
+            )
             .map(s => s.id);
           break;
         case 'incident-response':
           categoryScenarios = scenarios
-            .filter(s => s.title.toLowerCase().includes('incident') || 
-                        s.description.toLowerCase().includes('incident'))
+            .filter(s => s.title.toLowerCase().includes('incident') || s.description.toLowerCase().includes('incident'))
             .map(s => s.id);
           break;
         default:
           return false;
       }
 
-      return categoryScenarios.length > 0 && 
-             categoryScenarios.every(id => userCompletedIds.has(id));
+      return categoryScenarios.length > 0 && categoryScenarios.every(id => userCompletedIds.has(id));
     } catch (error) {
       logger.error('Error checking category completion', { error: error.message, userId, category });
       return false;
@@ -163,7 +164,7 @@ export class AchievementService {
 
       const now = new Date();
       const lastActivity = user.lastActivity ? new Date(user.lastActivity) : null;
-      
+
       if (!lastActivity) {
         // First activity
         await this.storage.updateUserStreak(userId, 1);
@@ -171,7 +172,7 @@ export class AchievementService {
       }
 
       const daysDiff = Math.floor((now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       if (daysDiff === 1) {
         // Consecutive day - increment streak
         await this.storage.updateUserStreak(userId, user.streak + 1);
@@ -197,8 +198,8 @@ export class AchievementService {
       if (scenarios.length === 0) return 0;
 
       const userScenarios = await this.storage.getUserScenarios(userId);
-      const completedInDomain = userScenarios.filter(us => 
-        us.completed && scenarios.some(s => s.id === us.scenarioId)
+      const completedInDomain = userScenarios.filter(
+        us => us.completed && scenarios.some(s => s.id === us.scenarioId)
       ).length;
 
       return Math.round((completedInDomain / scenarios.length) * 100);
@@ -212,7 +213,7 @@ export class AchievementService {
     try {
       const progress = await this.calculateDomainProgress(userId, domainId);
       const existingProgress = await this.storage.getUserProgressByDomain(userId, domainId);
-      
+
       const updateData = {
         progress,
         questionsCompleted: existingProgress?.questionsCompleted || 0,
@@ -224,7 +225,7 @@ export class AchievementService {
 
       // Check for domain progress achievements
       await this.checkAndAwardAchievements(userId, {
-        domainProgress: { domainId, progress }
+        domainProgress: { domainId, progress },
       });
     } catch (error) {
       logger.error('Error updating domain progress', { error: error.message, userId, domainId });
@@ -240,24 +241,22 @@ export class AchievementService {
     try {
       const allAchievements = await this.storage.getAllAchievements();
       const userAchievements = await this.storage.getUserAchievements(userId);
-      
+
       const earnedAchievementIds = new Set(userAchievements.map(ua => ua.achievementId));
       const earnedAchievementDetails = allAchievements.filter(a => earnedAchievementIds.has(a.id));
-      
+
       const totalXPFromAchievements = earnedAchievementDetails.reduce((sum, a) => sum + a.xpReward, 0);
-      
-      const recentAchievements = userAchievements
-        .slice(0, 5)
-        .map(ua => {
-          const achievement = allAchievements.find(a => a.id === ua.achievementId);
-          return {
-            ...ua,
-            name: achievement?.name,
-            description: achievement?.description,
-            icon: achievement?.icon,
-            xpReward: achievement?.xpReward,
-          };
-        });
+
+      const recentAchievements = userAchievements.slice(0, 5).map(ua => {
+        const achievement = allAchievements.find(a => a.id === ua.achievementId);
+        return {
+          ...ua,
+          name: achievement?.name,
+          description: achievement?.description,
+          icon: achievement?.icon,
+          xpReward: achievement?.xpReward,
+        };
+      });
 
       return {
         totalAchievements: allAchievements.length,

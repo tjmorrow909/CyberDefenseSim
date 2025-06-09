@@ -25,25 +25,29 @@ export const logger = winston.createLogger({
   defaultMeta: { service: 'cyberdefense-sim' },
   transports: [
     new winston.transports.Console({
-      silent: process.env.NODE_ENV === 'test'
-    })
-  ]
+      silent: process.env.NODE_ENV === 'test',
+    }),
+  ],
 });
 
 // Add file transport for production
 if (!isDevelopment) {
-  logger.add(new winston.transports.File({
-    filename: 'logs/error.log',
-    level: 'error',
-    maxsize: 5242880, // 5MB
-    maxFiles: 5
-  }));
+  logger.add(
+    new winston.transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    })
+  );
 
-  logger.add(new winston.transports.File({
-    filename: 'logs/combined.log',
-    maxsize: 5242880, // 5MB
-    maxFiles: 5
-  }));
+  logger.add(
+    new winston.transports.File({
+      filename: 'logs/combined.log',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    })
+  );
 }
 
 // Create logs directory if it doesn't exist

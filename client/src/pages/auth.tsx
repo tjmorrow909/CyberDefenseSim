@@ -1,29 +1,29 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, Eye, EyeOff, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Shield, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AuthPage() {
   const { login, register, isLoginLoading, isRegisterLoading, loginError, registerError } = useAuth();
   const { toast } = useToast();
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({
-    email: "",
-    password: ""
+    email: '',
+    password: '',
   });
   const [registerForm, setRegisterForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,26 +31,26 @@ export default function AuthPage() {
     try {
       await login(loginForm);
       toast({
-        title: "Welcome back!",
-        description: "You have been successfully logged in.",
+        title: 'Welcome back!',
+        description: 'You have been successfully logged in.',
       });
     } catch (error: any) {
       toast({
-        title: "Login failed",
-        description: error.message || "Please check your credentials and try again.",
-        variant: "destructive",
+        title: 'Login failed',
+        description: error.message || 'Please check your credentials and try again.',
+        variant: 'destructive',
       });
     }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (registerForm.password !== registerForm.confirmPassword) {
       toast({
-        title: "Password mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
+        title: 'Password mismatch',
+        description: 'Passwords do not match. Please try again.',
+        variant: 'destructive',
       });
       return;
     }
@@ -60,17 +60,17 @@ export default function AuthPage() {
         firstName: registerForm.firstName,
         lastName: registerForm.lastName,
         email: registerForm.email,
-        password: registerForm.password
+        password: registerForm.password,
       });
       toast({
-        title: "Account created!",
+        title: 'Account created!',
         description: "Welcome to CyberDefense Simulator. Let's start your cybersecurity journey!",
       });
     } catch (error: any) {
       toast({
-        title: "Registration failed",
-        description: error.message || "Please check your information and try again.",
-        variant: "destructive",
+        title: 'Registration failed',
+        description: error.message || 'Please check your information and try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -88,12 +88,18 @@ export default function AuthPage() {
   const getPasswordStrengthText = (strength: number) => {
     switch (strength) {
       case 0:
-      case 1: return { text: "Very Weak", color: "text-red-500" };
-      case 2: return { text: "Weak", color: "text-orange-500" };
-      case 3: return { text: "Fair", color: "text-yellow-500" };
-      case 4: return { text: "Good", color: "text-blue-500" };
-      case 5: return { text: "Strong", color: "text-green-500" };
-      default: return { text: "Very Weak", color: "text-red-500" };
+      case 1:
+        return { text: 'Very Weak', color: 'text-red-500' };
+      case 2:
+        return { text: 'Weak', color: 'text-orange-500' };
+      case 3:
+        return { text: 'Fair', color: 'text-yellow-500' };
+      case 4:
+        return { text: 'Good', color: 'text-blue-500' };
+      case 5:
+        return { text: 'Strong', color: 'text-green-500' };
+      default:
+        return { text: 'Very Weak', color: 'text-red-500' };
     }
   };
 
@@ -126,7 +132,7 @@ export default function AuthPage() {
                 <TabsTrigger value="login">Sign In</TabsTrigger>
                 <TabsTrigger value="register">Sign Up</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
@@ -136,20 +142,20 @@ export default function AuthPage() {
                       type="email"
                       placeholder="Enter your email"
                       value={loginForm.email}
-                      onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+                      onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="login-password">Password</Label>
                     <div className="relative">
                       <Input
                         id="login-password"
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         value={loginForm.password}
-                        onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                        onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
                         required
                       />
                       <Button
@@ -167,7 +173,7 @@ export default function AuthPage() {
                   {loginError && (
                     <Alert variant="destructive">
                       <AlertDescription>
-                        {(loginError as any)?.message || "Login failed. Please try again."}
+                        {(loginError as any)?.message || 'Login failed. Please try again.'}
                       </AlertDescription>
                     </Alert>
                   )}
@@ -178,7 +184,7 @@ export default function AuthPage() {
                   </Button>
                 </form>
               </TabsContent>
-              
+
               <TabsContent value="register" className="space-y-4">
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -188,7 +194,7 @@ export default function AuthPage() {
                         id="register-firstName"
                         placeholder="John"
                         value={registerForm.firstName}
-                        onChange={(e) => setRegisterForm({ ...registerForm, firstName: e.target.value })}
+                        onChange={e => setRegisterForm({ ...registerForm, firstName: e.target.value })}
                         required
                       />
                     </div>
@@ -198,12 +204,12 @@ export default function AuthPage() {
                         id="register-lastName"
                         placeholder="Doe"
                         value={registerForm.lastName}
-                        onChange={(e) => setRegisterForm({ ...registerForm, lastName: e.target.value })}
+                        onChange={e => setRegisterForm({ ...registerForm, lastName: e.target.value })}
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="register-email">Email</Label>
                     <Input
@@ -211,20 +217,20 @@ export default function AuthPage() {
                       type="email"
                       placeholder="john.doe@example.com"
                       value={registerForm.email}
-                      onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                      onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="register-password">Password</Label>
                     <div className="relative">
                       <Input
                         id="register-password"
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Create a strong password"
                         value={registerForm.password}
-                        onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                        onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })}
                         required
                       />
                       <Button
@@ -243,15 +249,15 @@ export default function AuthPage() {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="register-confirmPassword">Confirm Password</Label>
                     <Input
                       id="register-confirmPassword"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder="Confirm your password"
                       value={registerForm.confirmPassword}
-                      onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
+                      onChange={e => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
                       required
                     />
                   </div>
@@ -259,7 +265,7 @@ export default function AuthPage() {
                   {registerError && (
                     <Alert variant="destructive">
                       <AlertDescription>
-                        {(registerError as any)?.message || "Registration failed. Please try again."}
+                        {(registerError as any)?.message || 'Registration failed. Please try again.'}
                       </AlertDescription>
                     </Alert>
                   )}

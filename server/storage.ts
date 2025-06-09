@@ -17,7 +17,7 @@ import {
   type UserAchievement,
   type RefreshToken,
   type InsertRefreshToken,
-} from "@shared/schema";
+} from '@shared/schema';
 
 // Interface for storage operations
 export interface IStorage {
@@ -78,11 +78,46 @@ class SimpleStorage implements IStorage {
   private seedData() {
     // Create sample domains
     const domainsData = [
-      { id: 1, name: "Threats, Attacks and Vulnerabilities", description: "Security threats and vulnerability management", examPercentage: 24, color: "#EF4444", icon: "Shield" },
-      { id: 2, name: "Architecture and Design", description: "Secure architecture principles and design", examPercentage: 21, color: "#F59E0B", icon: "Building" },
-      { id: 3, name: "Implementation", description: "Security implementation and configuration", examPercentage: 25, color: "#10B981", icon: "Settings" },
-      { id: 4, name: "Operations and Incident Response", description: "Security operations and incident management", examPercentage: 16, color: "#3B82F6", icon: "AlertTriangle" },
-      { id: 5, name: "Governance, Risk and Compliance", description: "Risk management and compliance frameworks", examPercentage: 14, color: "#8B5CF6", icon: "FileText" }
+      {
+        id: 1,
+        name: 'Threats, Attacks and Vulnerabilities',
+        description: 'Security threats and vulnerability management',
+        examPercentage: 24,
+        color: '#EF4444',
+        icon: 'Shield',
+      },
+      {
+        id: 2,
+        name: 'Architecture and Design',
+        description: 'Secure architecture principles and design',
+        examPercentage: 21,
+        color: '#F59E0B',
+        icon: 'Building',
+      },
+      {
+        id: 3,
+        name: 'Implementation',
+        description: 'Security implementation and configuration',
+        examPercentage: 25,
+        color: '#10B981',
+        icon: 'Settings',
+      },
+      {
+        id: 4,
+        name: 'Operations and Incident Response',
+        description: 'Security operations and incident management',
+        examPercentage: 16,
+        color: '#3B82F6',
+        icon: 'AlertTriangle',
+      },
+      {
+        id: 5,
+        name: 'Governance, Risk and Compliance',
+        description: 'Risk management and compliance frameworks',
+        examPercentage: 14,
+        color: '#8B5CF6',
+        icon: 'FileText',
+      },
     ];
 
     domainsData.forEach(domain => {
@@ -93,49 +128,49 @@ class SimpleStorage implements IStorage {
     const scenariosData = [
       {
         id: 1,
-        title: "Network Vulnerability Assessment",
-        description: "Conduct a comprehensive vulnerability scan using Nessus",
-        type: "lab",
+        title: 'Network Vulnerability Assessment',
+        description: 'Conduct a comprehensive vulnerability scan using Nessus',
+        type: 'lab',
         domainId: 1,
-        difficulty: "intermediate",
+        difficulty: 'intermediate',
         estimatedTime: 45,
         xpReward: 150,
         content: {
-          background: "Your organization needs a security assessment",
-          scenario: "Perform vulnerability scanning and analysis",
-          codeExample: "nmap -sV -sC target_network"
-        }
+          background: 'Your organization needs a security assessment',
+          scenario: 'Perform vulnerability scanning and analysis',
+          codeExample: 'nmap -sV -sC target_network',
+        },
       },
       {
         id: 2,
-        title: "Incident Response Planning",
-        description: "Develop and implement incident response procedures",
-        type: "scenario",
+        title: 'Incident Response Planning',
+        description: 'Develop and implement incident response procedures',
+        type: 'scenario',
         domainId: 4,
-        difficulty: "advanced",
+        difficulty: 'advanced',
         estimatedTime: 60,
         xpReward: 200,
         content: {
-          background: "Security incident requires immediate response",
-          scenario: "Follow incident response framework",
-          codeExample: "Containment -> Eradication -> Recovery -> Lessons Learned"
-        }
+          background: 'Security incident requires immediate response',
+          scenario: 'Follow incident response framework',
+          codeExample: 'Containment -> Eradication -> Recovery -> Lessons Learned',
+        },
       },
       {
         id: 3,
-        title: "Cryptography Implementation",
-        description: "Implement secure encryption protocols",
-        type: "lab",
+        title: 'Cryptography Implementation',
+        description: 'Implement secure encryption protocols',
+        type: 'lab',
         domainId: 3,
-        difficulty: "expert",
+        difficulty: 'expert',
         estimatedTime: 90,
         xpReward: 250,
         content: {
-          background: "Data protection requires encryption",
-          scenario: "Design cryptographic solution",
-          codeExample: "AES-256 with proper key management"
-        }
-      }
+          background: 'Data protection requires encryption',
+          scenario: 'Design cryptographic solution',
+          codeExample: 'AES-256 with proper key management',
+        },
+      },
     ];
 
     scenariosData.forEach(scenario => {
@@ -146,20 +181,20 @@ class SimpleStorage implements IStorage {
     const achievementsData = [
       {
         id: 1,
-        name: "First Steps",
-        description: "Complete your first scenario",
-        icon: "Trophy",
+        name: 'First Steps',
+        description: 'Complete your first scenario',
+        icon: 'Trophy',
         xpReward: 50,
-        criteria: { scenariosCompleted: 1 }
+        criteria: { scenariosCompleted: 1 },
       },
       {
         id: 2,
-        name: "Security Expert",
-        description: "Complete 10 scenarios",
-        icon: "Star",
+        name: 'Security Expert',
+        description: 'Complete 10 scenarios',
+        icon: 'Star',
         xpReward: 200,
-        criteria: { scenariosCompleted: 10 }
-      }
+        criteria: { scenariosCompleted: 10 },
+      },
     ];
 
     achievementsData.forEach(achievement => {
@@ -283,7 +318,7 @@ class SimpleStorage implements IStorage {
   async updateUserProgress(userId: string, domainId: number, progress: Partial<UserProgress>): Promise<void> {
     const key = `${userId}-${domainId}`;
     const existing = this.userProgress.get(key);
-    
+
     if (existing) {
       Object.assign(existing, progress);
     } else {
@@ -312,7 +347,7 @@ class SimpleStorage implements IStorage {
   async updateUserScenario(userId: string, scenarioId: number, data: Partial<UserScenario>): Promise<void> {
     const key = `${userId}-${scenarioId}`;
     const existing = this.userScenarios.get(key);
-    
+
     if (existing) {
       Object.assign(existing, data);
     } else {

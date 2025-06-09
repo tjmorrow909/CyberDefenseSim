@@ -29,10 +29,8 @@ describe('AuthService', () => {
     it('should generate access and refresh tokens', () => {
       const userId = 'user123';
       const email = 'test@example.com';
-      
-      mockedJwt.sign
-        .mockReturnValueOnce('access-token')
-        .mockReturnValueOnce('refresh-token');
+
+      mockedJwt.sign.mockReturnValueOnce('access-token').mockReturnValueOnce('refresh-token');
 
       const result = AuthService.generateTokens(userId, email);
 
@@ -42,18 +40,12 @@ describe('AuthService', () => {
       });
 
       expect(mockedJwt.sign).toHaveBeenCalledTimes(2);
-      expect(mockedJwt.sign).toHaveBeenNthCalledWith(
-        1,
-        { userId, email, type: 'access' },
-        'test-secret-key',
-        { expiresIn: '7d' }
-      );
-      expect(mockedJwt.sign).toHaveBeenNthCalledWith(
-        2,
-        { userId, email, type: 'refresh' },
-        'test-secret-key',
-        { expiresIn: '30d' }
-      );
+      expect(mockedJwt.sign).toHaveBeenNthCalledWith(1, { userId, email, type: 'access' }, 'test-secret-key', {
+        expiresIn: '7d',
+      });
+      expect(mockedJwt.sign).toHaveBeenNthCalledWith(2, { userId, email, type: 'refresh' }, 'test-secret-key', {
+        expiresIn: '30d',
+      });
     });
   });
 
@@ -83,7 +75,7 @@ describe('AuthService', () => {
     it('should hash password with correct salt rounds', async () => {
       const password = 'testpassword';
       const hashedPassword = 'hashed-password';
-      
+
       mockedBcrypt.hash.mockResolvedValue(hashedPassword as never);
 
       const result = await AuthService.hashPassword(password);

@@ -1,73 +1,72 @@
-
-import Sidebar from "@/components/sidebar";
-import VulnerabilityScanner from "@/components/vulnerability-scanner";
-import ThreatIntelligence from "@/components/threat-intelligence";
-import CryptographyLab from "@/components/cryptography-lab";
-import { useQuery } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Shield, Search, Globe, Key, Terminal, Network, FileSearch } from "lucide-react";
-import { Link } from "wouter";
+import Sidebar from '@/components/sidebar';
+import VulnerabilityScanner from '@/components/vulnerability-scanner';
+import ThreatIntelligence from '@/components/threat-intelligence';
+import CryptographyLab from '@/components/cryptography-lab';
+import { useQuery } from '@tanstack/react-query';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, Shield, Search, Globe, Key, Terminal, Network, FileSearch } from 'lucide-react';
+import { Link } from 'wouter';
 
 export default function SecurityTools() {
   const { data: _domains } = useQuery({
-    queryKey: ["/api/domains"],
+    queryKey: ['/api/domains'],
   });
 
   const tools = [
     {
-      id: "scanner",
-      name: "Vulnerability Scanner",
-      description: "Nessus-style vulnerability assessment tool",
+      id: 'scanner',
+      name: 'Vulnerability Scanner',
+      description: 'Nessus-style vulnerability assessment tool',
       icon: <Search className="w-5 h-5" />,
-      category: "Assessment"
+      category: 'Assessment',
     },
     {
-      id: "threat-intel",
-      name: "Threat Intelligence",
-      description: "STIX/TAXII threat actor and IOC analysis",
+      id: 'threat-intel',
+      name: 'Threat Intelligence',
+      description: 'STIX/TAXII threat actor and IOC analysis',
       icon: <Globe className="w-5 h-5" />,
-      category: "Intelligence"
+      category: 'Intelligence',
     },
     {
-      id: "crypto-lab",
-      name: "Cryptography Lab",
-      description: "Classical cipher analysis and implementation",
+      id: 'crypto-lab',
+      name: 'Cryptography Lab',
+      description: 'Classical cipher analysis and implementation',
       icon: <Key className="w-5 h-5" />,
-      category: "Cryptography"
+      category: 'Cryptography',
     },
     {
-      id: "network-tools",
-      name: "Network Analysis",
-      description: "Network security testing tools",
+      id: 'network-tools',
+      name: 'Network Analysis',
+      description: 'Network security testing tools',
       icon: <Network className="w-5 h-5" />,
-      category: "Network",
-      comingSoon: true
+      category: 'Network',
+      comingSoon: true,
     },
     {
-      id: "forensics",
-      name: "Digital Forensics",
-      description: "Evidence collection and analysis",
+      id: 'forensics',
+      name: 'Digital Forensics',
+      description: 'Evidence collection and analysis',
       icon: <FileSearch className="w-5 h-5" />,
-      category: "Forensics",
-      comingSoon: true
+      category: 'Forensics',
+      comingSoon: true,
     },
     {
-      id: "pentest",
-      name: "Penetration Testing",
-      description: "Ethical hacking and exploitation tools",
+      id: 'pentest',
+      name: 'Penetration Testing',
+      description: 'Ethical hacking and exploitation tools',
       icon: <Terminal className="w-5 h-5" />,
-      category: "Testing",
-      comingSoon: true
-    }
+      category: 'Testing',
+      comingSoon: true,
+    },
   ];
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar domains={[]} />
-      
+
       <div className="flex-1 ml-64 min-h-screen">
         <header className="bg-card shadow-sm border-b border-border p-4">
           <div className="flex items-center space-x-4">
@@ -103,7 +102,7 @@ export default function SecurityTools() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {tools.map((tool) => (
+                    {tools.map(tool => (
                       <Card key={tool.id} className="relative">
                         <CardContent className="p-6">
                           <div className="space-y-4">
@@ -125,8 +124,8 @@ export default function SecurityTools() {
                             </div>
                             <p className="text-sm text-muted-foreground">{tool.description}</p>
                             {!tool.comingSoon && (
-                              <Button 
-                                className="w-full" 
+                              <Button
+                                className="w-full"
                                 onClick={() => {
                                   const tabElement = document.querySelector(`[value="${tool.id}"]`) as HTMLElement;
                                   tabElement?.click();

@@ -8,9 +8,9 @@ import prettier from 'eslint-config-prettier';
 export default [
   // Base configuration for all files
   {
-    ignores: ['dist/**', 'node_modules/**', '.eslintrc.js']
+    ignores: ['dist/**', 'node_modules/**', '.eslintrc.js'],
   },
-  
+
   // JavaScript and TypeScript files
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -20,8 +20,8 @@ export default [
       parser: typescriptParser,
       parserOptions: {
         ecmaFeatures: {
-          jsx: true
-        }
+          jsx: true,
+        },
       },
       globals: {
         // Node.js globals
@@ -76,65 +76,68 @@ export default [
         MediaQueryList: 'readonly',
 
         // React globals
-        React: 'readonly'
-      }
+        React: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': typescript,
-      'react': react,
-      'react-hooks': reactHooks
+      react: react,
+      'react-hooks': reactHooks,
     },
     rules: {
       // ESLint recommended rules
       ...js.configs.recommended.rules,
-      
+
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
-      
+
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
-      
+
       // React Hooks rules
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      
+
       // General JavaScript/TypeScript rules
       'prefer-const': 'error',
       'no-var': 'error',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'all'],
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
       'brace-style': ['error', '1tbs'],
       'comma-dangle': ['error', 'es5'],
-      'quotes': ['error', 'single', { avoidEscape: true }],
-      'semi': ['error', 'always'],
-      'indent': ['error', 2, { SwitchCase: 1 }],
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
+      indent: ['error', 2, { SwitchCase: 1 }],
       'max-len': ['warn', { code: 120, ignoreUrls: true }],
       'object-curly-spacing': ['error', 'always'],
       'array-bracket-spacing': ['error', 'never'],
-      'space-before-function-paren': ['error', {
-        anonymous: 'always',
-        named: 'never',
-        asyncArrow: 'always'
-      }],
+      'space-before-function-paren': [
+        'error',
+        {
+          anonymous: 'always',
+          named: 'never',
+          asyncArrow: 'always',
+        },
+      ],
       'keyword-spacing': 'error',
       'space-infix-ops': 'error',
       'comma-spacing': ['error', { before: false, after: true }],
       'no-trailing-spaces': 'error',
-      'eol-last': 'error'
+      'eol-last': 'error',
     },
     settings: {
       react: {
-        version: 'detect'
-      }
-    }
+        version: 'detect',
+      },
+    },
   },
-  
+
   // Test files configuration
   {
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
@@ -165,11 +168,11 @@ export default [
 
         // Test wrapper components
         TestWrapper: 'readonly',
-        AuthPage: 'readonly'
-      }
-    }
+        AuthPage: 'readonly',
+      },
+    },
   },
-  
+
   // Prettier configuration (should be last to override other formatting rules)
-  prettier
+  prettier,
 ];

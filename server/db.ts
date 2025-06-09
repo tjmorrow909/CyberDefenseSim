@@ -9,12 +9,8 @@ import path from 'path';
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  logger.error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+  logger.error('DATABASE_URL must be set. Did you forget to provision a database?');
+  throw new Error('DATABASE_URL must be set. Did you forget to provision a database?');
 }
 
 // Create postgres client
@@ -39,7 +35,8 @@ export async function runMigrations(): Promise<void> {
       return;
     }
 
-    const migrationFiles = fs.readdirSync(migrationsDir)
+    const migrationFiles = fs
+      .readdirSync(migrationsDir)
       .filter(file => file.endsWith('.sql'))
       .sort();
 

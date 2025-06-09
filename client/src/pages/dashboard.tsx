@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import Sidebar from "@/components/sidebar";
-import ProgressOverview from "@/components/progress-overview";
-import RecommendedActivities from "@/components/recommended-activities";
-import LearningStats from "@/components/learning-stats";
-import { useAuth } from "@/hooks/useAuth";
-import { Star, Flame } from "lucide-react";
+import { useQuery } from '@tanstack/react-query';
+import Sidebar from '@/components/sidebar';
+import ProgressOverview from '@/components/progress-overview';
+import RecommendedActivities from '@/components/recommended-activities';
+import LearningStats from '@/components/learning-stats';
+import { useAuth } from '@/hooks/useAuth';
+import { Star, Flame } from 'lucide-react';
 
 interface DashboardData {
   user: {
@@ -58,7 +58,11 @@ interface DashboardData {
 export default function Dashboard() {
   const { user } = useAuth();
 
-  const { data: dashboardData, isLoading, error } = useQuery<DashboardData>({
+  const {
+    data: dashboardData,
+    isLoading,
+    error,
+  } = useQuery<DashboardData>({
     queryKey: [`/api/users/${user?.id}/dashboard`],
     enabled: !!user?.id,
   });
@@ -90,9 +94,7 @@ export default function Dashboard() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-foreground mb-2">Unable to load dashboard</h2>
-          <p className="text-muted-foreground">
-            Error loading data. Please try again.
-          </p>
+          <p className="text-muted-foreground">Error loading data. Please try again.</p>
         </div>
       </div>
     );
@@ -101,15 +103,13 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar domains={dashboardData.domains} />
-      
+
       <div className="flex-1 ml-64 min-h-screen">
         {/* Header */}
         <header className="bg-card shadow-sm border-b border-border p-4">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-bold text-foreground">
-                Welcome back, {dashboardData.user.firstName}!
-              </h2>
+              <h2 className="text-2xl font-bold text-foreground">Welcome back, {dashboardData.user.firstName}!</h2>
               <p className="text-muted-foreground">Continue your cybersecurity journey</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -127,7 +127,8 @@ export default function Dashboard() {
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-primary-foreground font-medium">
-                    {dashboardData.user.firstName[0]}{dashboardData.user.lastName[0]}
+                    {dashboardData.user.firstName[0]}
+                    {dashboardData.user.lastName[0]}
                   </span>
                 </div>
               </div>
@@ -137,26 +138,41 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <main className="p-6 space-y-6">
-          <ProgressOverview 
+          <ProgressOverview
             overallProgress={dashboardData.overallProgress}
             domains={dashboardData.domains}
             recentAchievements={dashboardData.recentAchievements}
           />
-          
+
           <RecommendedActivities scenarios={dashboardData.recommendedScenarios} />
-          
+
           <LearningStats stats={dashboardData.stats} />
 
           {/* Quick Action Buttons */}
           <div className="fixed bottom-6 right-6 space-y-3">
             <button className="w-14 h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group">
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-5 h-5 group-hover:scale-110 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </button>
             <button className="w-14 h-14 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group">
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1M12 14h0" />
+              <svg
+                className="w-5 h-5 group-hover:scale-110 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1M12 14h0"
+                />
               </svg>
             </button>
           </div>

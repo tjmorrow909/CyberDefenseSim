@@ -1,15 +1,15 @@
-import { createServer } from "http";
-import app from "./app";
-import { logger } from "./logger";
-import { authenticateToken } from "./auth";
-import { initializeDatabase, closeDatabaseConnection } from "./db";
-import { WebSocketService } from "./websocket-service";
+import { createServer } from 'http';
+import app from './app';
+import { logger } from './logger';
+import { authenticateToken } from './auth';
+import { initializeDatabase, closeDatabaseConnection } from './db';
+import { WebSocketService } from './websocket-service';
 
 // Import route modules
-import authRoutes from "./routes/auth";
-import userRoutes from "./routes/users";
-import contentRoutes from "./routes/content";
-import adminRoutes from "./routes/admin";
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
+import contentRoutes from './routes/content';
+import adminRoutes from './routes/admin';
 
 // Mount routes
 app.use('/api/auth', authRoutes);
@@ -18,15 +18,15 @@ app.use('/api/admin', adminRoutes);
 app.use('/api', contentRoutes);
 
 // Legacy API compatibility routes (deprecated)
-app.get("/api/users/:id", authenticateToken, async (req, res) => {
+app.get('/api/users/:id', authenticateToken, async (req, res) => {
   res.redirect(`/api/users/${req.params.id}`);
 });
 
-app.get("/api/domains", async (req, res) => {
+app.get('/api/domains', async (req, res) => {
   res.redirect('/api/domains');
 });
 
-app.get("/api/scenarios", async (req, res) => {
+app.get('/api/scenarios', async (req, res) => {
   res.redirect('/api/scenarios');
 });
 
@@ -74,7 +74,7 @@ async function startServer() {
         environment: process.env.NODE_ENV || 'development',
         url: `http://localhost:${port}`,
         websocket: `ws://localhost:${port}/ws`,
-        database: process.env.DATABASE_URL ? 'Connected' : 'In-memory'
+        database: process.env.DATABASE_URL ? 'Connected' : 'In-memory',
       });
     });
   } catch (error) {

@@ -1,7 +1,7 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Trophy, Target } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Clock, Trophy, Target } from 'lucide-react';
 
 interface Scenario {
   id: number;
@@ -31,10 +31,14 @@ export default function ScenarioModal({ scenario, isOpen, onClose, onStart }: Sc
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'lab': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'scenario': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
-      case 'challenge': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'lab':
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'scenario':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
+      case 'challenge':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
@@ -47,18 +51,16 @@ export default function ScenarioModal({ scenario, isOpen, onClose, onStart }: Sc
               <DialogTitle className="text-xl font-bold">{scenario.title}</DialogTitle>
               <DialogDescription>{scenario.description}</DialogDescription>
             </div>
-            <Badge className={getTypeColor(scenario.type)}>
-              {scenario.type}
-            </Badge>
+            <Badge className={getTypeColor(scenario.type)}>{scenario.type}</Badge>
           </div>
         </DialogHeader>
-        
+
         <div className="space-y-6">
           <div className="bg-muted rounded-lg p-6">
             <h4 className="font-semibold text-foreground mb-3">Scenario Background</h4>
             <p className="text-muted-foreground mb-4">{scenario.content.background}</p>
             <p className="text-foreground font-medium">{scenario.content.scenario}</p>
-            
+
             {scenario.content.codeExample && (
               <div className="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400">
                 <div className="text-gray-400 mb-2">// Code Example:</div>
@@ -81,7 +83,7 @@ export default function ScenarioModal({ scenario, isOpen, onClose, onStart }: Sc
               <span>+{scenario.xpReward} XP</span>
             </div>
           </div>
-          
+
           <div className="flex space-x-3">
             <Button onClick={onStart} className="flex-1">
               Start Investigation

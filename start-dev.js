@@ -5,7 +5,7 @@ const path = require('path');
 const serverProcess = spawn('node', ['--import', 'tsx', 'server/index.ts'], {
   stdio: 'inherit',
   env: { ...process.env, NODE_ENV: 'development' },
-  cwd: __dirname
+  cwd: __dirname,
 });
 
 // Handle process termination
@@ -13,12 +13,12 @@ process.on('SIGTERM', () => serverProcess.kill('SIGTERM'));
 process.on('SIGINT', () => serverProcess.kill('SIGINT'));
 process.on('exit', () => serverProcess.kill());
 
-serverProcess.on('exit', (code) => {
+serverProcess.on('exit', code => {
   console.log(`Server process exited with code ${code}`);
   process.exit(code);
 });
 
-serverProcess.on('error', (error) => {
+serverProcess.on('error', error => {
   console.error('Failed to start server:', error);
   process.exit(1);
 });

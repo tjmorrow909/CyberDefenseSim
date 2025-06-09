@@ -5,6 +5,7 @@ A comprehensive cybersecurity training platform designed to provide hands-on lea
 ## 🌟 Features
 
 ### 🎯 Core Learning Features
+
 - **Interactive Cybersecurity Scenarios** - Hands-on labs and simulations
 - **Comprehensive Domain Coverage** - Aligned with CompTIA Security+ curriculum
 - **Progress Tracking** - Detailed analytics and learning paths
@@ -12,6 +13,7 @@ A comprehensive cybersecurity training platform designed to provide hands-on lea
 - **Real-time Collaboration** - WebSocket-powered interactive features
 
 ### 🔧 Technical Features
+
 - **Modern Tech Stack** - React, TypeScript, Node.js, PostgreSQL
 - **Secure Authentication** - JWT-based auth with refresh tokens
 - **Real-time Updates** - WebSocket integration for live features
@@ -19,6 +21,7 @@ A comprehensive cybersecurity training platform designed to provide hands-on lea
 - **Production Ready** - Docker support, CI/CD pipeline, comprehensive testing
 
 ### 📚 Educational Domains
+
 1. **General Security Concepts** (12% of curriculum)
 2. **Threats, Vulnerabilities & Mitigations** (22% of curriculum)
 3. **Security Architecture** (18% of curriculum)
@@ -28,12 +31,14 @@ A comprehensive cybersecurity training platform designed to provide hands-on lea
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 - PostgreSQL (optional - can use Docker)
 - Docker & Docker Compose (optional)
 
 ### Option 1: Automated Setup (Recommended)
+
 ```bash
 git clone https://github.com/your-org/cyberdefense-simulator.git
 cd cyberdefense-simulator
@@ -41,6 +46,7 @@ npm run setup
 ```
 
 ### Option 2: Manual Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/your-org/cyberdefense-simulator.git
@@ -64,6 +70,7 @@ npm run dev
 ```
 
 ### Option 3: Docker Setup
+
 ```bash
 # Development environment
 npm run docker:dev
@@ -75,6 +82,7 @@ npm run docker:prod
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 18** - Modern UI library with hooks
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
@@ -83,6 +91,7 @@ npm run docker:prod
 - **React Query** - Server state management
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express** - Web application framework
 - **TypeScript** - Type-safe server code
@@ -92,6 +101,7 @@ npm run docker:prod
 - **WebSockets** - Real-time communication
 
 ### DevOps & Tools
+
 - **Docker** - Containerization
 - **GitHub Actions** - CI/CD pipeline
 - **ESLint** - Code linting
@@ -125,6 +135,7 @@ CyberDefenseSim/
 ## 🧪 Testing
 
 ### Run Tests
+
 ```bash
 # Unit tests
 npm test
@@ -140,6 +151,7 @@ npm run test:e2e
 ```
 
 ### Test Coverage Goals
+
 - **Unit Tests**: 80%+ coverage
 - **Integration Tests**: All API endpoints
 - **E2E Tests**: Critical user flows
@@ -147,6 +159,7 @@ npm run test:e2e
 ## 🚀 Deployment
 
 ### Environment Variables
+
 ```bash
 # Server Configuration
 NODE_ENV=production
@@ -165,6 +178,7 @@ ENABLE_RATE_LIMITING=true
 ```
 
 ### Production Deployment
+
 ```bash
 # Build for production
 npm run build
@@ -181,6 +195,7 @@ docker-compose up -d
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ### Development Workflow
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -189,6 +204,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 6. Submit a pull request
 
 ### Code Quality
+
 - Follow TypeScript best practices
 - Write comprehensive tests
 - Use conventional commit messages

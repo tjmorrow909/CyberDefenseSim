@@ -18,3 +18,6 @@
 {"achievementId":1,"achievementName":"First Steps","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-08T23:49:29.684Z","userId":"test-user-1"}
 {"achievementId":2,"achievementName":"Perfect Score","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-08T23:49:29.690Z","userId":"test-user-2"}
 {"achievementId":1,"achievementName":"First Steps","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-08T23:49:29.690Z","userId":"test-user-3"}
+{"achievementId":1,"achievementName":"First Steps","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-09T00:37:35.939Z","userId":"test-user-1"}
+{"achievementId":2,"achievementName":"Perfect Score","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-09T00:37:35.947Z","userId":"test-user-2"}
+{"achievementId":1,"achievementName":"First Steps","level":"info","message":"Achievement awarded","service":"cyberdefense-sim","timestamp":"2025-06-09T00:37:35.949Z","userId":"test-user-3"}

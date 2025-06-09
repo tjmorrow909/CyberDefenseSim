@@ -18,7 +18,7 @@ export class CustomError extends Error implements AppError {
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.code = code;
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -76,7 +76,7 @@ export class DatabaseError extends CustomError {
 // Error response formatter
 function formatErrorResponse(error: AppError, req: Request) {
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
   const baseResponse = {
     success: false,
     message: error.message,
@@ -103,7 +103,7 @@ function handleZodError(error: ZodError): ValidationError {
     const path = err.path.join('.');
     return `${path}: ${err.message}`;
   });
-  
+
   return new ValidationError(`Validation failed: ${messages.join(', ')}`);
 }
 
@@ -125,12 +125,7 @@ function handleDatabaseError(error: any): DatabaseError {
 }
 
 // Main error handling middleware
-export const errorHandler = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
   let appError: AppError = error as AppError;
 
   // Handle specific error types
@@ -196,7 +191,7 @@ export const setupGlobalErrorHandlers = (): void => {
       stack: reason?.stack,
       promise: promise.toString(),
     });
-    
+
     // In production, you might want to gracefully shutdown
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);
@@ -208,7 +203,7 @@ export const setupGlobalErrorHandlers = (): void => {
       error: error.message,
       stack: error.stack,
     });
-    
+
     // Always exit on uncaught exception
     process.exit(1);
   });

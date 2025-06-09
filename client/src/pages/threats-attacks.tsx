@@ -1,35 +1,36 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import Sidebar from "@/components/sidebar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Shield, 
-  AlertTriangle, 
-  Bug, 
-  Zap, 
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import Sidebar from '@/components/sidebar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Shield,
+  AlertTriangle,
+  Bug,
+  Zap,
   Globe,
   Users,
   Network,
   ArrowLeft,
+  Eye,
   Target,
   Skull,
   Lock,
-  Wifi
-} from "lucide-react";
-import { Link } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
+  Wifi,
+} from 'lucide-react';
+import { Link } from 'wouter';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ThreatCategory {
   id: string;
   name: string;
   description: string;
   icon: React.ReactNode;
-  severity: "Critical" | "High" | "Medium" | "Low";
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
   examples: string[];
   mitigations: string[];
   realWorldExample: {
@@ -45,7 +46,7 @@ interface AttackVector {
   name: string;
   description: string;
   category: string;
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   steps: string[];
   prevention: string[];
   tools: string[];
@@ -60,164 +61,183 @@ export default function ThreatsAttacks() {
   // Comprehensive threat categories based on CompTIA Security+ curriculum
   const threatCategories: ThreatCategory[] = [
     {
-      id: "malware",
-      name: "Malware",
-      description: "Malicious software designed to damage, disrupt, or gain unauthorized access to systems",
+      id: 'malware',
+      name: 'Malware',
+      description: 'Malicious software designed to damage, disrupt, or gain unauthorized access to systems',
       icon: <Bug className="w-6 h-6" />,
-      severity: "Critical",
-      examples: ["Viruses", "Worms", "Trojans", "Ransomware", "Spyware", "Adware", "Rootkits", "Keyloggers"],
-      mitigations: ["Antivirus software", "Regular updates", "Email filtering", "User education", "Application whitelisting"],
+      severity: 'Critical',
+      examples: ['Viruses', 'Worms', 'Trojans', 'Ransomware', 'Spyware', 'Adware', 'Rootkits', 'Keyloggers'],
+      mitigations: [
+        'Antivirus software',
+        'Regular updates',
+        'Email filtering',
+        'User education',
+        'Application whitelisting',
+      ],
       realWorldExample: {
-        title: "WannaCry Ransomware (2017)",
-        description: "Global ransomware attack that infected over 300,000 computers across 150+ countries",
-        impact: "Disrupted healthcare systems, caused billions in damages, affected critical infrastructure",
-        year: "2017"
-      }
+        title: 'WannaCry Ransomware (2017)',
+        description: 'Global ransomware attack that infected over 300,000 computers across 150+ countries',
+        impact: 'Disrupted healthcare systems, caused billions in damages, affected critical infrastructure',
+        year: '2017',
+      },
     },
     {
-      id: "social-engineering",
-      name: "Social Engineering",
-      description: "Psychological manipulation techniques to trick people into divulging confidential information",
+      id: 'social-engineering',
+      name: 'Social Engineering',
+      description: 'Psychological manipulation techniques to trick people into divulging confidential information',
       icon: <Users className="w-6 h-6" />,
-      severity: "High",
-      examples: ["Phishing", "Spear phishing", "Whaling", "Vishing", "Smishing", "Pretexting", "Baiting", "Tailgating"],
-      mitigations: ["Security awareness training", "Email security", "Verification procedures", "Access controls"],
+      severity: 'High',
+      examples: ['Phishing', 'Spear phishing', 'Whaling', 'Vishing', 'Smishing', 'Pretexting', 'Baiting', 'Tailgating'],
+      mitigations: ['Security awareness training', 'Email security', 'Verification procedures', 'Access controls'],
       realWorldExample: {
-        title: "Target Data Breach (2013)",
-        description: "Attackers used spear phishing to compromise HVAC vendor credentials",
-        impact: "40 million credit card numbers stolen, $162 million in costs",
-        year: "2013"
-      }
+        title: 'Target Data Breach (2013)',
+        description: 'Attackers used spear phishing to compromise HVAC vendor credentials',
+        impact: '40 million credit card numbers stolen, $162 million in costs',
+        year: '2013',
+      },
     },
     {
-      id: "application-attacks",
-      name: "Application Attacks",
-      description: "Attacks targeting vulnerabilities in software applications and web services",
+      id: 'application-attacks',
+      name: 'Application Attacks',
+      description: 'Attacks targeting vulnerabilities in software applications and web services',
       icon: <Globe className="w-6 h-6" />,
-      severity: "High",
-      examples: ["SQL Injection", "Cross-Site Scripting (XSS)", "CSRF", "Directory Traversal", "Buffer Overflow", "Code Injection"],
-      mitigations: ["Input validation", "Parameterized queries", "WAF", "Secure coding practices", "Regular testing"],
+      severity: 'High',
+      examples: [
+        'SQL Injection',
+        'Cross-Site Scripting (XSS)',
+        'CSRF',
+        'Directory Traversal',
+        'Buffer Overflow',
+        'Code Injection',
+      ],
+      mitigations: ['Input validation', 'Parameterized queries', 'WAF', 'Secure coding practices', 'Regular testing'],
       realWorldExample: {
-        title: "Equifax Data Breach (2017)",
-        description: "Exploited Apache Struts vulnerability affecting 147 million people",
-        impact: "Personal data of 147 million consumers exposed, $4 billion in costs",
-        year: "2017"
-      }
+        title: 'Equifax Data Breach (2017)',
+        description: 'Exploited Apache Struts vulnerability affecting 147 million people',
+        impact: 'Personal data of 147 million consumers exposed, $4 billion in costs',
+        year: '2017',
+      },
     },
     {
-      id: "network-attacks",
-      name: "Network Attacks",
-      description: "Attacks targeting network infrastructure and communication protocols",
+      id: 'network-attacks',
+      name: 'Network Attacks',
+      description: 'Attacks targeting network infrastructure and communication protocols',
       icon: <Network className="w-6 h-6" />,
-      severity: "High",
-      examples: ["DDoS", "Man-in-the-Middle", "ARP Spoofing", "DNS Poisoning", "Packet Sniffing", "Session Hijacking"],
-      mitigations: ["Network segmentation", "Encryption", "IDS/IPS", "Firewalls", "VPNs", "Network monitoring"],
+      severity: 'High',
+      examples: ['DDoS', 'Man-in-the-Middle', 'ARP Spoofing', 'DNS Poisoning', 'Packet Sniffing', 'Session Hijacking'],
+      mitigations: ['Network segmentation', 'Encryption', 'IDS/IPS', 'Firewalls', 'VPNs', 'Network monitoring'],
       realWorldExample: {
-        title: "Dyn DNS Attack (2016)",
-        description: "Massive DDoS attack using Mirai botnet targeting DNS infrastructure",
-        impact: "Major websites including Twitter, Netflix, Reddit became inaccessible",
-        year: "2016"
-      }
+        title: 'Dyn DNS Attack (2016)',
+        description: 'Massive DDoS attack using Mirai botnet targeting DNS infrastructure',
+        impact: 'Major websites including Twitter, Netflix, Reddit became inaccessible',
+        year: '2016',
+      },
     },
     {
-      id: "physical-attacks",
-      name: "Physical Attacks",
-      description: "Attacks requiring physical access to systems, devices, or facilities",
+      id: 'physical-attacks',
+      name: 'Physical Attacks',
+      description: 'Attacks requiring physical access to systems, devices, or facilities',
       icon: <Lock className="w-6 h-6" />,
-      severity: "Medium",
-      examples: ["USB attacks", "Card cloning", "Shoulder surfing", "Dumpster diving", "Lock picking", "Tailgating"],
-      mitigations: ["Physical security controls", "Device encryption", "Clean desk policy", "Access controls", "Surveillance"],
+      severity: 'Medium',
+      examples: ['USB attacks', 'Card cloning', 'Shoulder surfing', 'Dumpster diving', 'Lock picking', 'Tailgating'],
+      mitigations: [
+        'Physical security controls',
+        'Device encryption',
+        'Clean desk policy',
+        'Access controls',
+        'Surveillance',
+      ],
       realWorldExample: {
-        title: "RSA SecurID Breach (2011)",
-        description: "Physical theft of RSA tokens compromised two-factor authentication",
-        impact: "Millions of SecurID tokens compromised, affecting major corporations",
-        year: "2011"
-      }
+        title: 'RSA SecurID Breach (2011)',
+        description: 'Physical theft of RSA tokens compromised two-factor authentication',
+        impact: 'Millions of SecurID tokens compromised, affecting major corporations',
+        year: '2011',
+      },
     },
     {
-      id: "wireless-attacks",
-      name: "Wireless Attacks",
-      description: "Attacks targeting wireless networks and communication protocols",
+      id: 'wireless-attacks',
+      name: 'Wireless Attacks',
+      description: 'Attacks targeting wireless networks and communication protocols',
       icon: <Wifi className="w-6 h-6" />,
-      severity: "Medium",
-      examples: ["Evil Twin", "WPS attacks", "Bluetooth attacks", "Jamming", "Wardriving", "Rogue Access Points"],
-      mitigations: ["WPA3 encryption", "Network monitoring", "MAC filtering", "Disable WPS", "Regular audits"],
+      severity: 'Medium',
+      examples: ['Evil Twin', 'WPS attacks', 'Bluetooth attacks', 'Jamming', 'Wardriving', 'Rogue Access Points'],
+      mitigations: ['WPA3 encryption', 'Network monitoring', 'MAC filtering', 'Disable WPS', 'Regular audits'],
       realWorldExample: {
-        title: "KRACK Attack (2017)",
-        description: "Key Reinstallation Attack against WPA2 protocol",
-        impact: "Affected billions of devices using WPA2, allowed traffic interception",
-        year: "2017"
-      }
-    }
+        title: 'KRACK Attack (2017)',
+        description: 'Key Reinstallation Attack against WPA2 protocol',
+        impact: 'Affected billions of devices using WPA2, allowed traffic interception',
+        year: '2017',
+      },
+    },
   ];
 
   const attackVectors: AttackVector[] = [
     {
-      id: "sql-injection",
-      name: "SQL Injection",
-      description: "Inserting malicious SQL code into application queries to manipulate databases",
-      category: "Application Attack",
-      difficulty: "Intermediate",
+      id: 'sql-injection',
+      name: 'SQL Injection',
+      description: 'Inserting malicious SQL code into application queries to manipulate databases',
+      category: 'Application Attack',
+      difficulty: 'Intermediate',
       steps: [
-        "Identify input fields that interact with database",
-        "Test for SQL injection vulnerabilities",
-        "Craft malicious SQL payload",
-        "Execute payload to extract or modify data",
-        "Escalate privileges if possible"
+        'Identify input fields that interact with database',
+        'Test for SQL injection vulnerabilities',
+        'Craft malicious SQL payload',
+        'Execute payload to extract or modify data',
+        'Escalate privileges if possible',
       ],
       prevention: [
-        "Use parameterized queries/prepared statements",
-        "Implement input validation and sanitization",
-        "Apply principle of least privilege to database accounts",
-        "Use stored procedures where appropriate",
-        "Regular security testing and code reviews"
+        'Use parameterized queries/prepared statements',
+        'Implement input validation and sanitization',
+        'Apply principle of least privilege to database accounts',
+        'Use stored procedures where appropriate',
+        'Regular security testing and code reviews',
       ],
-      tools: ["SQLMap", "Burp Suite", "OWASP ZAP", "Havij", "jSQL Injection"]
+      tools: ['SQLMap', 'Burp Suite', 'OWASP ZAP', 'Havij', 'jSQL Injection'],
     },
     {
-      id: "phishing",
-      name: "Phishing Attack",
-      description: "Fraudulent attempt to obtain sensitive information by impersonating trustworthy entities",
-      category: "Social Engineering",
-      difficulty: "Beginner",
+      id: 'phishing',
+      name: 'Phishing Attack',
+      description: 'Fraudulent attempt to obtain sensitive information by impersonating trustworthy entities',
+      category: 'Social Engineering',
+      difficulty: 'Beginner',
       steps: [
-        "Research target organization and employees",
-        "Create convincing fake website or email",
-        "Send phishing messages to targets",
-        "Collect credentials or install malware",
-        "Use obtained access for further attacks"
+        'Research target organization and employees',
+        'Create convincing fake website or email',
+        'Send phishing messages to targets',
+        'Collect credentials or install malware',
+        'Use obtained access for further attacks',
       ],
       prevention: [
-        "Security awareness training",
-        "Email filtering and authentication (SPF, DKIM, DMARC)",
-        "Multi-factor authentication",
-        "Regular phishing simulations",
-        "Incident response procedures"
+        'Security awareness training',
+        'Email filtering and authentication (SPF, DKIM, DMARC)',
+        'Multi-factor authentication',
+        'Regular phishing simulations',
+        'Incident response procedures',
       ],
-      tools: ["Gophish", "King Phisher", "Social-Engineer Toolkit", "Evilginx", "Modlishka"]
+      tools: ['Gophish', 'King Phisher', 'Social-Engineer Toolkit', 'Evilginx', 'Modlishka'],
     },
     {
-      id: "ddos",
-      name: "DDoS Attack",
-      description: "Overwhelming target systems with traffic from multiple sources to cause service disruption",
-      category: "Network Attack",
-      difficulty: "Advanced",
+      id: 'ddos',
+      name: 'DDoS Attack',
+      description: 'Overwhelming target systems with traffic from multiple sources to cause service disruption',
+      category: 'Network Attack',
+      difficulty: 'Advanced',
       steps: [
-        "Build or rent botnet infrastructure",
-        "Identify target vulnerabilities and capacity",
-        "Launch coordinated attack from multiple sources",
-        "Monitor attack effectiveness",
-        "Adjust attack parameters to maintain impact"
+        'Build or rent botnet infrastructure',
+        'Identify target vulnerabilities and capacity',
+        'Launch coordinated attack from multiple sources',
+        'Monitor attack effectiveness',
+        'Adjust attack parameters to maintain impact',
       ],
       prevention: [
-        "DDoS protection services",
-        "Rate limiting and traffic shaping",
-        "Network redundancy and load balancing",
-        "Incident response planning",
-        "ISP-level filtering"
+        'DDoS protection services',
+        'Rate limiting and traffic shaping',
+        'Network redundancy and load balancing',
+        'Incident response planning',
+        'ISP-level filtering',
       ],
-      tools: ["LOIC", "HOIC", "Slowloris", "Hping3", "Stress testing tools"]
-    }
+      tools: ['LOIC', 'HOIC', 'Slowloris', 'Hping3', 'Stress testing tools'],
+    },
   ];
 
   const { data: userProgress } = useQuery({
@@ -227,20 +247,29 @@ export default function ThreatsAttacks() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "Critical": return "bg-red-500 text-white";
-      case "High": return "bg-orange-500 text-white";
-      case "Medium": return "bg-yellow-500 text-black";
-      case "Low": return "bg-green-500 text-white";
-      default: return "bg-gray-500 text-white";
+      case 'Critical':
+        return 'bg-red-500 text-white';
+      case 'High':
+        return 'bg-orange-500 text-white';
+      case 'Medium':
+        return 'bg-yellow-500 text-black';
+      case 'Low':
+        return 'bg-green-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case "Advanced": return "bg-red-500 text-white";
-      case "Intermediate": return "bg-yellow-500 text-black";
-      case "Beginner": return "bg-green-500 text-white";
-      default: return "bg-gray-500 text-white";
+      case 'Advanced':
+        return 'bg-red-500 text-white';
+      case 'Intermediate':
+        return 'bg-yellow-500 text-black';
+      case 'Beginner':
+        return 'bg-green-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
     }
   };
 
@@ -291,7 +320,7 @@ export default function ThreatsAttacks() {
 
             <TabsContent value="threats" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {threatCategories.map((threat) => (
+                {threatCategories.map(threat => (
                   <Card
                     key={threat.id}
                     className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
@@ -303,9 +332,7 @@ export default function ThreatsAttacks() {
                           {threat.icon}
                           <CardTitle className="text-lg">{threat.name}</CardTitle>
                         </div>
-                        <Badge className={getSeverityColor(threat.severity)}>
-                          {threat.severity}
-                        </Badge>
+                        <Badge className={getSeverityColor(threat.severity)}>{threat.severity}</Badge>
                       </div>
                       <CardDescription>{threat.description}</CardDescription>
                     </CardHeader>
@@ -390,7 +417,7 @@ export default function ThreatsAttacks() {
 
             <TabsContent value="attacks" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {attackVectors.map((attack) => (
+                {attackVectors.map(attack => (
                   <Card
                     key={attack.id}
                     className="cursor-pointer hover:shadow-lg transition-all duration-200"
@@ -399,9 +426,7 @@ export default function ThreatsAttacks() {
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">{attack.name}</CardTitle>
-                        <Badge className={getDifficultyColor(attack.difficulty)}>
-                          {attack.difficulty}
-                        </Badge>
+                        <Badge className={getDifficultyColor(attack.difficulty)}>{attack.difficulty}</Badge>
                       </div>
                       <CardDescription>{attack.description}</CardDescription>
                     </CardHeader>
@@ -493,7 +518,7 @@ export default function ThreatsAttacks() {
 
             <TabsContent value="simulation" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {attackVectors.map((attack) => (
+                {attackVectors.map(attack => (
                   <Card key={attack.id} className="relative">
                     <CardHeader>
                       <CardTitle className="text-lg">{attack.name} Simulation</CardTitle>
@@ -503,9 +528,7 @@ export default function ThreatsAttacks() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <Badge className={getDifficultyColor(attack.difficulty)}>
-                          {attack.difficulty}
-                        </Badge>
+                        <Badge className={getDifficultyColor(attack.difficulty)}>{attack.difficulty}</Badge>
                         <span className="text-sm text-muted-foreground">{attack.category}</span>
                       </div>
 
@@ -518,17 +541,11 @@ export default function ThreatsAttacks() {
                           <Progress value={66} />
                           <Alert>
                             <AlertTriangle className="w-4 h-4" />
-                            <AlertDescription>
-                              Attack simulation in progress. Monitor your defenses!
-                            </AlertDescription>
+                            <AlertDescription>Attack simulation in progress. Monitor your defenses!</AlertDescription>
                           </Alert>
                         </div>
                       ) : (
-                        <Button
-                          onClick={() => simulateAttack(attack.id)}
-                          className="w-full"
-                          variant="outline"
-                        >
+                        <Button onClick={() => simulateAttack(attack.id)} className="w-full" variant="outline">
                           <Zap className="w-4 h-4 mr-2" />
                           Start Simulation
                         </Button>
@@ -552,8 +569,8 @@ export default function ThreatsAttacks() {
                   <Alert>
                     <Shield className="w-4 h-4" />
                     <AlertDescription>
-                      <strong>Safe Learning Environment:</strong> All simulations run in isolated containers
-                      and cannot affect real systems. Perfect for hands-on learning without risk.
+                      <strong>Safe Learning Environment:</strong> All simulations run in isolated containers and cannot
+                      affect real systems. Perfect for hands-on learning without risk.
                     </AlertDescription>
                   </Alert>
 
@@ -593,12 +610,12 @@ export default function ThreatsAttacks() {
                   <CardContent className="space-y-4">
                     <div className="space-y-3">
                       {[
-                        { layer: "Perimeter Security", description: "Firewalls, IDS/IPS, DMZ" },
-                        { layer: "Network Security", description: "Segmentation, VLANs, NAC" },
-                        { layer: "Endpoint Security", description: "Antivirus, EDR, Device encryption" },
-                        { layer: "Application Security", description: "WAF, Code review, Input validation" },
-                        { layer: "Data Security", description: "Encryption, DLP, Access controls" },
-                        { layer: "User Security", description: "Training, MFA, Privilege management" }
+                        { layer: 'Perimeter Security', description: 'Firewalls, IDS/IPS, DMZ' },
+                        { layer: 'Network Security', description: 'Segmentation, VLANs, NAC' },
+                        { layer: 'Endpoint Security', description: 'Antivirus, EDR, Device encryption' },
+                        { layer: 'Application Security', description: 'WAF, Code review, Input validation' },
+                        { layer: 'Data Security', description: 'Encryption, DLP, Access controls' },
+                        { layer: 'User Security', description: 'Training, MFA, Privilege management' },
                       ].map((item, index) => (
                         <div key={index} className="flex items-start space-x-3 p-3 border rounded-lg">
                           <div className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold">
@@ -620,19 +637,17 @@ export default function ThreatsAttacks() {
                       <Target className="w-5 h-5 text-blue-500" />
                       <span>Incident Response</span>
                     </CardTitle>
-                    <CardDescription>
-                      Structured approach to handling security incidents
-                    </CardDescription>
+                    <CardDescription>Structured approach to handling security incidents</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-3">
                       {[
-                        { phase: "Preparation", description: "Plans, tools, training" },
-                        { phase: "Identification", description: "Detect and analyze incidents" },
-                        { phase: "Containment", description: "Limit damage and prevent spread" },
-                        { phase: "Eradication", description: "Remove threats from systems" },
-                        { phase: "Recovery", description: "Restore normal operations" },
-                        { phase: "Lessons Learned", description: "Improve processes and defenses" }
+                        { phase: 'Preparation', description: 'Plans, tools, training' },
+                        { phase: 'Identification', description: 'Detect and analyze incidents' },
+                        { phase: 'Containment', description: 'Limit damage and prevent spread' },
+                        { phase: 'Eradication', description: 'Remove threats from systems' },
+                        { phase: 'Recovery', description: 'Restore normal operations' },
+                        { phase: 'Lessons Learned', description: 'Improve processes and defenses' },
                       ].map((item, index) => (
                         <div key={index} className="flex items-start space-x-3 p-3 border rounded-lg">
                           <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
@@ -655,9 +670,7 @@ export default function ThreatsAttacks() {
                     <Lock className="w-5 h-5 text-purple-500" />
                     <span>Security Controls Framework</span>
                   </CardTitle>
-                  <CardDescription>
-                    Comprehensive security controls organized by type and function
-                  </CardDescription>
+                  <CardDescription>Comprehensive security controls organized by type and function</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -665,12 +678,12 @@ export default function ThreatsAttacks() {
                       <h3 className="font-semibold mb-3 text-green-600">Preventive Controls</h3>
                       <div className="space-y-2">
                         {[
-                          "Access controls",
-                          "Firewalls",
-                          "Encryption",
-                          "Security training",
-                          "Antivirus software",
-                          "Physical barriers"
+                          'Access controls',
+                          'Firewalls',
+                          'Encryption',
+                          'Security training',
+                          'Antivirus software',
+                          'Physical barriers',
                         ].map((control, index) => (
                           <div key={index} className="flex items-center space-x-2">
                             <div className="w-2 h-2 rounded-full bg-green-500"></div>
@@ -684,12 +697,12 @@ export default function ThreatsAttacks() {
                       <h3 className="font-semibold mb-3 text-blue-600">Detective Controls</h3>
                       <div className="space-y-2">
                         {[
-                          "IDS/IPS",
-                          "SIEM systems",
-                          "Log monitoring",
-                          "Vulnerability scans",
-                          "Security audits",
-                          "Surveillance cameras"
+                          'IDS/IPS',
+                          'SIEM systems',
+                          'Log monitoring',
+                          'Vulnerability scans',
+                          'Security audits',
+                          'Surveillance cameras',
                         ].map((control, index) => (
                           <div key={index} className="flex items-center space-x-2">
                             <div className="w-2 h-2 rounded-full bg-blue-500"></div>
@@ -703,12 +716,12 @@ export default function ThreatsAttacks() {
                       <h3 className="font-semibold mb-3 text-orange-600">Corrective Controls</h3>
                       <div className="space-y-2">
                         {[
-                          "Incident response",
-                          "Backup systems",
-                          "Patch management",
-                          "System recovery",
-                          "Quarantine procedures",
-                          "Emergency procedures"
+                          'Incident response',
+                          'Backup systems',
+                          'Patch management',
+                          'System recovery',
+                          'Quarantine procedures',
+                          'Emergency procedures',
                         ].map((control, index) => (
                           <div key={index} className="flex items-center space-x-2">
                             <div className="w-2 h-2 rounded-full bg-orange-500"></div>

@@ -127,7 +127,7 @@ describe('Authentication E2E Tests', () => {
     // Access protected route
     const response = await fetch(`${BASE_URL}/api/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

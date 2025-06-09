@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
 describe('AuthPage', () => {
-
   it('renders the login form by default', () => {
     render(
       <TestWrapper>
@@ -117,7 +116,7 @@ describe('AuthPage', () => {
     await user.click(screen.getByRole('tab', { name: 'Sign Up' }));
 
     const passwordInput = screen.getAllByLabelText(/password/i)[0];
-    
+
     await user.type(passwordInput, 'weak');
     expect(screen.getByText(/Very Weak|Weak/i)).toBeInTheDocument();
 
@@ -223,17 +222,17 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText(/first name/i), 'John');
     await user.type(screen.getByLabelText(/last name/i), 'Doe');
     await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com');
-    
+
     const passwordInputs = screen.getAllByLabelText(/password/i);
     await user.type(passwordInputs[0], 'StrongPass123!');
     await user.type(passwordInputs[1], 'StrongPass123!');
-    
+
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Account created!',
-        description: 'Welcome to CyberDefense Simulator. Let\'s start your cybersecurity journey!',
+        description: "Welcome to CyberDefense Simulator. Let's start your cybersecurity journey!",
       });
     });
   });

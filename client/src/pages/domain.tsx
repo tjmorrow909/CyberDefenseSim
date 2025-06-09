@@ -1,19 +1,19 @@
-import { useParams } from "wouter";
-import { useQuery } from "@tanstack/react-query";
-import Sidebar from "@/components/sidebar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Trophy, Target } from "lucide-react";
-import { Link } from "wouter";
+import { useParams } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
+import Sidebar from '@/components/sidebar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Clock, Target } from 'lucide-react';
+import { Link } from 'wouter';
 
 export default function Domain() {
   const { id } = useParams();
-  const domainId = parseInt(id || "1");
+  const domainId = parseInt(id || '1');
 
   const { data: domains } = useQuery({
-    queryKey: ["/api/domains"],
+    queryKey: ['/api/domains'],
   });
 
   const { data: domain } = useQuery({
@@ -55,26 +55,34 @@ export default function Domain() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'lab': return 'bg-red-100 text-red-800';
-      case 'scenario': return 'bg-purple-100 text-purple-800';
-      case 'challenge': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'lab':
+        return 'bg-red-100 text-red-800';
+      case 'scenario':
+        return 'bg-purple-100 text-purple-800';
+      case 'challenge':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'beginner':
+        return 'bg-green-500';
+      case 'intermediate':
+        return 'bg-yellow-500';
+      case 'advanced':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
     }
   };
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar domains={domains || []} />
-      
+
       <div className="flex-1 ml-64 min-h-screen">
         {/* Header */}
         <header className="bg-card shadow-sm border-b border-border p-4">
@@ -106,27 +114,26 @@ export default function Domain() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-foreground">
-                    {userProgress?.progress || 0}%
-                  </div>
+                  <div className="text-3xl font-bold text-foreground">{userProgress?.progress || 0}%</div>
                   <div className="text-sm text-muted-foreground">Completion</div>
                   <Progress value={userProgress?.progress || 0} className="mt-2" />
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-foreground">
-                    {userProgress?.questionsCompleted || 0}
-                  </div>
+                  <div className="text-3xl font-bold text-foreground">{userProgress?.questionsCompleted || 0}</div>
                   <div className="text-sm text-muted-foreground">Questions Completed</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-secondary">
-                    {userProgress ? Math.round((userProgress.questionsCorrect / Math.max(userProgress.questionsCompleted, 1)) * 100) : 0}%
+                    {userProgress
+                      ? Math.round((userProgress.questionsCorrect / Math.max(userProgress.questionsCompleted, 1)) * 100)
+                      : 0}
+                    %
                   </div>
                   <div className="text-sm text-muted-foreground">Accuracy</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-accent">
-                    {userProgress ? Math.round(userProgress.timeSpent / 60 * 10) / 10 : 0}h
+                    {userProgress ? Math.round((userProgress.timeSpent / 60) * 10) / 10 : 0}h
                   </div>
                   <div className="text-sm text-muted-foreground">Study Time</div>
                 </div>
@@ -144,14 +151,10 @@ export default function Domain() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="space-y-2">
-                          <Badge className={getTypeColor(scenario.type)}>
-                            {scenario.type}
-                          </Badge>
+                          <Badge className={getTypeColor(scenario.type)}>{scenario.type}</Badge>
                           <div className="flex items-center space-x-1">
                             <div className={`w-2 h-2 rounded-full ${getDifficultyColor(scenario.difficulty)}`}></div>
-                            <span className="text-xs text-muted-foreground capitalize">
-                              {scenario.difficulty}
-                            </span>
+                            <span className="text-xs text-muted-foreground capitalize">{scenario.difficulty}</span>
                           </div>
                         </div>
                         <div className="text-right">

@@ -10,7 +10,7 @@ import {
   updateProgressSchema,
   updateScenarioSchema,
   domainIdParamSchema,
-  scenarioIdParamSchema
+  scenarioIdParamSchema,
 } from '../validation';
 
 const router = Router();
@@ -22,12 +22,12 @@ router.use(authenticateToken);
 router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.params.id;
-    
+
     // Ensure user can only access their own data
     if (req.user?.id !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -35,7 +35,7 @@ router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: Auth
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -62,11 +62,13 @@ router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: Auth
     const totalQuestionsCompleted = userProgress.reduce((sum, p) => sum + (p.questionsCompleted || 0), 0);
     const totalQuestionsCorrect = userProgress.reduce((sum, p) => sum + (p.questionsCorrect || 0), 0);
     const totalTimeSpent = userProgress.reduce((sum, p) => sum + (p.timeSpent || 0), 0);
-    const accuracy = totalQuestionsCompleted > 0 ? Math.round((totalQuestionsCorrect / totalQuestionsCompleted) * 100) : 0;
+    const accuracy =
+      totalQuestionsCompleted > 0 ? Math.round((totalQuestionsCorrect / totalQuestionsCompleted) * 100) : 0;
 
     // Find weakest domain
-    const weakestDomain = domainsWithProgress.reduce((weakest, domain) => 
-      domain.progress < (weakest?.progress || 100) ? domain : weakest, null
+    const weakestDomain = domainsWithProgress.reduce(
+      (weakest, domain) => (domain.progress < (weakest?.progress || 100) ? domain : weakest),
+      null
     );
 
     res.json({
@@ -77,7 +79,7 @@ router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: Auth
           firstName: user.firstName,
           lastName: user.lastName,
           xp: user.xp,
-          streak: user.streak
+          streak: user.streak,
         },
         overallProgress,
         domains: domainsWithProgress,
@@ -89,13 +91,13 @@ router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: Auth
           studyTime: totalTimeSpent,
           weakestDomain: weakestDomain?.id || null,
         },
-      }
+      },
     });
   } catch (error) {
     logger.error('Error fetching dashboard data', { error: error.message, userId: req.params.id });
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch dashboard data'
+      message: 'Failed to fetch dashboard data',
     });
   }
 });
@@ -104,12 +106,12 @@ router.get('/:id/dashboard', validateParams(userIdParamSchema), async (req: Auth
 router.get('/:id', validateParams(userIdParamSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.params.id;
-    
+
     // Ensure user can only access their own data
     if (req.user?.id !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -117,7 +119,7 @@ router.get('/:id', validateParams(userIdParamSchema), async (req: AuthenticatedR
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -132,85 +134,91 @@ router.get('/:id', validateParams(userIdParamSchema), async (req: AuthenticatedR
           xp: user.xp,
           streak: user.streak,
           lastActivity: user.lastActivity,
-          createdAt: user.createdAt
-        }
-      }
+          createdAt: user.createdAt,
+        },
+      },
     });
   } catch (error) {
     logger.error('Error fetching user', { error: error.message, userId: req.params.id });
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch user'
+      message: 'Failed to fetch user',
     });
   }
 });
 
 // Update user profile
-router.put('/:id', validateParams(userIdParamSchema), validateBody(updateUserSchema), async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const userId = req.params.id;
-    
-    // Ensure user can only update their own data
-    if (req.user?.id !== userId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied'
-      });
-    }
-
-    const user = await storage.getUser(userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    const updatedUser = await storage.upsertUser({
-      ...user,
-      ...req.body,
-      id: userId,
-      updatedAt: new Date()
-    });
-
-    res.json({
-      success: true,
-      message: 'Profile updated successfully',
-      data: {
-        user: {
-          id: updatedUser.id,
-          email: updatedUser.email,
-          firstName: updatedUser.firstName,
-          lastName: updatedUser.lastName,
-          xp: updatedUser.xp,
-          streak: updatedUser.streak
-        }
-      }
-    });
-  } catch (error) {
-    logger.error('Error updating user', { error: error.message, userId: req.params.id });
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update profile'
-    });
-  }
-});
-
-// Update user progress for a domain
-router.put('/:id/progress/:domainId', 
-  validateParams(userIdParamSchema), 
-  validateParams(domainIdParamSchema), 
-  validateBody(updateProgressSchema), 
+router.put(
+  '/:id',
+  validateParams(userIdParamSchema),
+  validateBody(updateUserSchema),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.params.id;
-      const domainId = parseInt(req.params.domainId);
-      
+
       // Ensure user can only update their own data
       if (req.user?.id !== userId) {
         return res.status(403).json({
           success: false,
-          message: 'Access denied'
+          message: 'Access denied',
+        });
+      }
+
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      }
+
+      const updatedUser = await storage.upsertUser({
+        ...user,
+        ...req.body,
+        id: userId,
+        updatedAt: new Date(),
+      });
+
+      res.json({
+        success: true,
+        message: 'Profile updated successfully',
+        data: {
+          user: {
+            id: updatedUser.id,
+            email: updatedUser.email,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            xp: updatedUser.xp,
+            streak: updatedUser.streak,
+          },
+        },
+      });
+    } catch (error) {
+      logger.error('Error updating user', { error: error.message, userId: req.params.id });
+      res.status(500).json({
+        success: false,
+        message: 'Failed to update profile',
+      });
+    }
+  }
+);
+
+// Update user progress for a domain
+router.put(
+  '/:id/progress/:domainId',
+  validateParams(userIdParamSchema),
+  validateParams(domainIdParamSchema),
+  validateBody(updateProgressSchema),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.params.id;
+      const domainId = parseInt(req.params.domainId);
+
+      // Ensure user can only update their own data
+      if (req.user?.id !== userId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied',
         });
       }
 
@@ -218,33 +226,34 @@ router.put('/:id/progress/:domainId',
 
       res.json({
         success: true,
-        message: 'Progress updated successfully'
+        message: 'Progress updated successfully',
       });
     } catch (error) {
       logger.error('Error updating user progress', { error: error.message, userId: req.params.id });
       res.status(500).json({
         success: false,
-        message: 'Failed to update progress'
+        message: 'Failed to update progress',
       });
     }
   }
 );
 
 // Update user scenario completion
-router.put('/:id/scenarios/:scenarioId', 
-  validateParams(userIdParamSchema), 
-  validateParams(scenarioIdParamSchema), 
-  validateBody(updateScenarioSchema), 
+router.put(
+  '/:id/scenarios/:scenarioId',
+  validateParams(userIdParamSchema),
+  validateParams(scenarioIdParamSchema),
+  validateBody(updateScenarioSchema),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.params.id;
       const scenarioId = parseInt(req.params.scenarioId);
-      
+
       // Ensure user can only update their own data
       if (req.user?.id !== userId) {
         return res.status(403).json({
           success: false,
-          message: 'Access denied'
+          message: 'Access denied',
         });
       }
 
@@ -266,7 +275,7 @@ router.put('/:id/scenarios/:scenarioId',
               scenarioCompleted: true,
               scenarioId,
               score: req.body.score,
-              timeSpent: req.body.timeSpent
+              timeSpent: req.body.timeSpent,
             });
 
             return res.json({
@@ -274,8 +283,8 @@ router.put('/:id/scenarios/:scenarioId',
               message: 'Scenario progress updated successfully',
               data: {
                 xpAwarded: scenario.xpReward,
-                newAchievements: newAchievements.length
-              }
+                newAchievements: newAchievements.length,
+              },
             });
           }
         }
@@ -283,13 +292,13 @@ router.put('/:id/scenarios/:scenarioId',
 
       res.json({
         success: true,
-        message: 'Scenario progress updated successfully'
+        message: 'Scenario progress updated successfully',
       });
     } catch (error) {
       logger.error('Error updating scenario progress', { error: error.message, userId: req.params.id });
       res.status(500).json({
         success: false,
-        message: 'Failed to update scenario progress'
+        message: 'Failed to update scenario progress',
       });
     }
   }
@@ -304,7 +313,7 @@ router.get('/:id/achievements', validateParams(userIdParamSchema), async (req: A
     if (req.user?.id !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -312,13 +321,13 @@ router.get('/:id/achievements', validateParams(userIdParamSchema), async (req: A
 
     res.json({
       success: true,
-      data: stats
+      data: stats,
     });
   } catch (error) {
     logger.error('Error fetching user achievements', { error: error.message, userId: req.params.id });
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch achievements'
+      message: 'Failed to fetch achievements',
     });
   }
 });
@@ -332,7 +341,7 @@ router.get('/:id/progress', validateParams(userIdParamSchema), async (req: Authe
     if (req.user?.id !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -349,20 +358,21 @@ router.get('/:id/progress', validateParams(userIdParamSchema), async (req: Authe
       data: {
         overallProgress,
         domains: progress,
-        totalDomains
-      }
+        totalDomains,
+      },
     });
   } catch (error) {
     logger.error('Error fetching user progress', { error: error.message, userId: req.params.id });
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch progress'
+      message: 'Failed to fetch progress',
     });
   }
 });
 
 // Get user progress for specific domain
-router.get('/:id/progress/:domainId',
+router.get(
+  '/:id/progress/:domainId',
   validateParams(userIdParamSchema),
   validateParams(domainIdParamSchema),
   async (req: AuthenticatedRequest, res: Response) => {
@@ -374,7 +384,7 @@ router.get('/:id/progress/:domainId',
       if (req.user?.id !== userId) {
         return res.status(403).json({
           success: false,
-          message: 'Access denied'
+          message: 'Access denied',
         });
       }
 
@@ -384,7 +394,7 @@ router.get('/:id/progress/:domainId',
       if (!domain) {
         return res.status(404).json({
           success: false,
-          message: 'Domain not found'
+          message: 'Domain not found',
         });
       }
 
@@ -396,15 +406,19 @@ router.get('/:id/progress/:domainId',
             progress: 0,
             questionsCompleted: 0,
             questionsCorrect: 0,
-            timeSpent: 0
-          }
-        }
+            timeSpent: 0,
+          },
+        },
       });
     } catch (error) {
-      logger.error('Error fetching domain progress', { error: error.message, userId: req.params.id, domainId: req.params.domainId });
+      logger.error('Error fetching domain progress', {
+        error: error.message,
+        userId: req.params.id,
+        domainId: req.params.domainId,
+      });
       res.status(500).json({
         success: false,
-        message: 'Failed to fetch domain progress'
+        message: 'Failed to fetch domain progress',
       });
     }
   }

@@ -20,15 +20,15 @@ export class WebSocketService {
   private clients: Map<string, AuthenticatedWebSocket[]> = new Map();
 
   constructor(server: any) {
-    this.wss = new WebSocketServer({ 
+    this.wss = new WebSocketServer({
       server,
       path: '/ws',
-      verifyClient: this.verifyClient.bind(this)
+      verifyClient: this.verifyClient.bind(this),
     });
 
     this.wss.on('connection', this.handleConnection.bind(this));
     this.setupHeartbeat();
-    
+
     logger.info('WebSocket service initialized');
   }
 
@@ -36,7 +36,7 @@ export class WebSocketService {
     try {
       const url = new URL(info.req.url || '', `http://${info.req.headers.host}`);
       const token = url.searchParams.get('token');
-      
+
       if (!token) {
         logger.warn('WebSocket connection rejected: No token provided');
         return false;
@@ -74,7 +74,7 @@ export class WebSocketService {
     this.sendToClient(ws, {
       type: 'connected',
       data: { message: 'Connected to CyberDefense Simulator' },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Handle incoming messages
@@ -99,7 +99,7 @@ export class WebSocketService {
     });
 
     // Handle errors
-    ws.on('error', (error) => {
+    ws.on('error', error => {
       logger.error('WebSocket error', { error: error.message, userId });
       this.removeClient(userId, ws);
     });
@@ -107,12 +107,12 @@ export class WebSocketService {
 
   private handleMessage(ws: AuthenticatedWebSocket, message: WebSocketMessage) {
     const userId = ws.userId!;
-    
+
     switch (message.type) {
       case 'ping':
         this.sendToClient(ws, {
           type: 'pong',
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
         break;
 
@@ -126,7 +126,7 @@ export class WebSocketService {
         this.broadcastToUser(userId, {
           type: 'scenario_started',
           data: { scenarioId: message.data.scenarioId },
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
         break;
 
@@ -135,7 +135,7 @@ export class WebSocketService {
         this.broadcastToUser(userId, {
           type: 'scenario_progress_update',
           data: message.data,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
         break;
 
@@ -147,11 +147,11 @@ export class WebSocketService {
   private handleSubscription(ws: AuthenticatedWebSocket, subscriptionData: any) {
     // Store subscription preferences on the WebSocket
     (ws as any).subscriptions = subscriptionData;
-    
+
     this.sendToClient(ws, {
       type: 'subscription_confirmed',
       data: subscriptionData,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -162,7 +162,7 @@ export class WebSocketService {
       if (index > -1) {
         userClients.splice(index, 1);
       }
-      
+
       if (userClients.length === 0) {
         this.clients.delete(userId);
       }
@@ -200,7 +200,7 @@ export class WebSocketService {
     this.broadcastToUser(userId, {
       type: 'achievement_earned',
       data: achievement,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -208,7 +208,7 @@ export class WebSocketService {
     this.broadcastToUser(userId, {
       type: 'progress_updated',
       data: progress,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -216,7 +216,7 @@ export class WebSocketService {
     this.broadcastToUser(userId, {
       type: 'scenario_completed',
       data: scenarioData,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -224,7 +224,7 @@ export class WebSocketService {
     this.broadcastToAll({
       type: 'leaderboard_updated',
       data: leaderboardData,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -236,7 +236,7 @@ export class WebSocketService {
           ws.terminate();
           return;
         }
-        
+
         ws.isAlive = false;
         ws.ping();
       });
@@ -249,8 +249,8 @@ export class WebSocketService {
       uniqueUsers: this.clients.size,
       userConnections: Array.from(this.clients.entries()).map(([userId, connections]) => ({
         userId,
-        connections: connections.length
-      }))
+        connections: connections.length,
+      })),
     };
   }
 

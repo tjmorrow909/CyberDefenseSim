@@ -10,10 +10,10 @@ const __dirname = dirname(__filename);
 const serverProcess = spawn('node', ['--import', 'tsx', 'server/index.ts'], {
   stdio: 'inherit',
   env: { ...process.env, NODE_ENV: 'development' },
-  cwd: join(__dirname, '..')
+  cwd: join(__dirname, '..'),
 });
 
-serverProcess.on('exit', (code) => {
+serverProcess.on('exit', code => {
   process.exit(code);
 });
 

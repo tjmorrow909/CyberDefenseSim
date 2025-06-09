@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import { Shield, User, Mail } from "lucide-react";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
+import { useToast } from '@/hooks/use-toast';
+import { Shield, User, Mail } from 'lucide-react';
 
 const profileSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -25,42 +25,41 @@ export default function ProfileSetup() {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: '',
+      lastName: '',
+      email: '',
     },
   });
 
   const onSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const result = await response.json();
-      
+
       // Store user ID in localStorage for simple authentication
-      localStorage.setItem("userId", result.userId);
-      
+      localStorage.setItem('userId', result.userId);
+
       toast({
-        title: "Profile Created Successfully!",
-        description: "Welcome to CyberSec Training Platform",
+        title: 'Profile Created Successfully!',
+        description: 'Welcome to CyberSec Training Platform',
       });
 
       // Force page reload to trigger authentication
       window.location.reload();
-      
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error('Registration error:', error);
       toast({
-        title: "Registration Failed",
-        description: "Please try again or contact support",
-        variant: "destructive",
+        title: 'Registration Failed',
+        description: 'Please try again or contact support',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -76,7 +75,8 @@ export default function ProfileSetup() {
           </div>
           <CardTitle className="text-2xl">Create Your Profile</CardTitle>
           <CardDescription>
-            Join the CyberSec Training Platform to access interactive scenarios, security tools, and certification preparation.
+            Join the CyberSec Training Platform to access interactive scenarios, security tools, and certification
+            preparation.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -98,7 +98,7 @@ export default function ProfileSetup() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="lastName"
@@ -115,7 +115,7 @@ export default function ProfileSetup() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="email"
@@ -132,13 +132,13 @@ export default function ProfileSetup() {
                   </FormItem>
                 )}
               />
-              
+
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating Profile..." : "Create Profile & Start Learning"}
+                {isLoading ? 'Creating Profile...' : 'Create Profile & Start Learning'}
               </Button>
             </form>
           </Form>
-          
+
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>By creating a profile, you agree to our terms of service and privacy policy.</p>
           </div>

@@ -22,6 +22,11 @@ import {
 import { IStorage } from './storage';
 import { logger } from './logger';
 
+// Helper function to safely extract error message
+const getErrorMessage = (error: unknown): string => {
+  return error instanceof Error ? error.message : String(error);
+};
+
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
@@ -29,7 +34,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
       return result[0];
     } catch (error) {
-      logger.error('Error getting user', { error: error.message, userId: id });
+      logger.error('Error getting user', { error: error instanceof Error ? error.message : String(error), userId: id });
       throw error;
     }
   }
@@ -60,7 +65,8 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date(),
       };
 
-      const result = await db.insert(users)
+      const result = await db
+        .insert(users)
         .values(userToInsert)
         .onConflictDoUpdate({
           target: users.id,
@@ -74,7 +80,7 @@ export class DatabaseStorage implements IStorage {
             streak: userToInsert.streak,
             lastActivity: userToInsert.lastActivity,
             updatedAt: userToInsert.updatedAt,
-          }
+          },
         })
         .returning();
 
@@ -87,9 +93,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserXP(userId: string, xp: number): Promise<void> {
     try {
-      await db.update(users)
-        .set({ xp, updatedAt: new Date() })
-        .where(eq(users.id, userId));
+      await db.update(users).set({ xp, updatedAt: new Date() }).where(eq(users.id, userId));
     } catch (error) {
       logger.error('Error updating user XP', { error: error.message, userId, xp });
       throw error;
@@ -98,9 +102,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserStreak(userId: string, streak: number): Promise<void> {
     try {
-      await db.update(users)
-        .set({ streak, updatedAt: new Date() })
-        .where(eq(users.id, userId));
+      await db.update(users).set({ streak, updatedAt: new Date() }).where(eq(users.id, userId));
     } catch (error) {
       logger.error('Error updating user streak', { error: error.message, userId, streak });
       throw error;
@@ -109,9 +111,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserActivity(userId: string): Promise<void> {
     try {
-      await db.update(users)
-        .set({ lastActivity: new Date(), updatedAt: new Date() })
-        .where(eq(users.id, userId));
+      await db.update(users).set({ lastActivity: new Date(), updatedAt: new Date() }).where(eq(users.id, userId));
     } catch (error) {
       logger.error('Error updating user activity', { error: error.message, userId });
       throw error;
@@ -224,7 +224,8 @@ export class DatabaseStorage implements IStorage {
 
   async getUserProgressByDomain(userId: string, domainId: number): Promise<UserProgress | undefined> {
     try {
-      const result = await db.select()
+      const result = await db
+        .select()
         .from(userProgress)
         .where(and(eq(userProgress.userId, userId), eq(userProgress.domainId, domainId)))
         .limit(1);
@@ -238,9 +239,10 @@ export class DatabaseStorage implements IStorage {
   async updateUserProgress(userId: string, domainId: number, progress: Partial<UserProgress>): Promise<void> {
     try {
       const existing = await this.getUserProgressByDomain(userId, domainId);
-      
+
       if (existing) {
-        await db.update(userProgress)
+        await db
+          .update(userProgress)
           .set(progress)
           .where(and(eq(userProgress.userId, userId), eq(userProgress.domainId, domainId)));
       } else {
@@ -271,7 +273,8 @@ export class DatabaseStorage implements IStorage {
 
   async getUserScenario(userId: string, scenarioId: number): Promise<UserScenario | undefined> {
     try {
-      const result = await db.select()
+      const result = await db
+        .select()
         .from(userScenarios)
         .where(and(eq(userScenarios.userId, userId), eq(userScenarios.scenarioId, scenarioId)))
         .limit(1);
@@ -285,9 +288,10 @@ export class DatabaseStorage implements IStorage {
   async updateUserScenario(userId: string, scenarioId: number, data: Partial<UserScenario>): Promise<void> {
     try {
       const existing = await this.getUserScenario(userId, scenarioId);
-      
+
       if (existing) {
-        await db.update(userScenarios)
+        await db
+          .update(userScenarios)
           .set(data)
           .where(and(eq(userScenarios.userId, userId), eq(userScenarios.scenarioId, scenarioId)));
       } else {
@@ -319,7 +323,8 @@ export class DatabaseStorage implements IStorage {
 
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {
     try {
-      return await db.select()
+      return await db
+        .select()
         .from(userAchievements)
         .where(eq(userAchievements.userId, userId))
         .orderBy(desc(userAchievements.earnedAt));
@@ -332,7 +337,8 @@ export class DatabaseStorage implements IStorage {
   async awardAchievement(userId: string, achievementId: number): Promise<void> {
     try {
       // Check if user already has this achievement
-      const existing = await db.select()
+      const existing = await db
+        .select()
         .from(userAchievements)
         .where(and(eq(userAchievements.userId, userId), eq(userAchievements.achievementId, achievementId)))
         .limit(1);
@@ -343,7 +349,7 @@ export class DatabaseStorage implements IStorage {
           achievementId,
           earnedAt: new Date(),
         });
-        
+
         // Award XP for achievement
         const achievement = await db.select().from(achievements).where(eq(achievements.id, achievementId)).limit(1);
         if (achievement[0]) {

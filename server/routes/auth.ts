@@ -3,12 +3,7 @@ import { nanoid } from 'nanoid';
 import { AuthService, AuthenticatedRequest } from '../auth';
 import { storage } from '../storage';
 import { logger } from '../logger';
-import {
-  validateBody,
-  registerSchema,
-  loginSchema,
-  refreshTokenSchema
-} from '../validation';
+import { validateBody, registerSchema, loginSchema, refreshTokenSchema } from '../validation';
 
 const router = Router();
 
@@ -22,7 +17,7 @@ router.post('/register', validateBody(registerSchema), async (req: Authenticated
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: 'User with this email already exists'
+        message: 'User with this email already exists',
       });
     }
 
@@ -37,7 +32,7 @@ router.post('/register', validateBody(registerSchema), async (req: Authenticated
       firstName,
       lastName,
       passwordHash,
-      profileImageUrl: null
+      profileImageUrl: null,
     });
 
     // Generate tokens
@@ -58,17 +53,17 @@ router.post('/register', validateBody(registerSchema), async (req: Authenticated
           firstName: user.firstName,
           lastName: user.lastName,
           xp: user.xp,
-          streak: user.streak
+          streak: user.streak,
         },
         accessToken,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
   } catch (error) {
     logger.error('Registration error', { error: error.message });
     res.status(500).json({
       success: false,
-      message: 'Registration failed'
+      message: 'Registration failed',
     });
   }
 });
@@ -83,7 +78,7 @@ router.post('/login', validateBody(loginSchema), async (req: AuthenticatedReques
     if (!user || !user.passwordHash) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Invalid email or password',
       });
     }
 
@@ -92,7 +87,7 @@ router.post('/login', validateBody(loginSchema), async (req: AuthenticatedReques
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Invalid email or password',
       });
     }
 
@@ -117,17 +112,17 @@ router.post('/login', validateBody(loginSchema), async (req: AuthenticatedReques
           firstName: user.firstName,
           lastName: user.lastName,
           xp: user.xp,
-          streak: user.streak
+          streak: user.streak,
         },
         accessToken,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
   } catch (error) {
     logger.error('Login error', { error: error.message });
     res.status(500).json({
       success: false,
-      message: 'Login failed'
+      message: 'Login failed',
     });
   }
 });
@@ -142,7 +137,7 @@ router.post('/refresh', validateBody(refreshTokenSchema), async (req: Authentica
     if (!payload || payload.type !== 'refresh') {
       return res.status(401).json({
         success: false,
-        message: 'Invalid refresh token'
+        message: 'Invalid refresh token',
       });
     }
 
@@ -151,7 +146,7 @@ router.post('/refresh', validateBody(refreshTokenSchema), async (req: Authentica
     if (!storedToken) {
       return res.status(401).json({
         success: false,
-        message: 'Refresh token not found'
+        message: 'Refresh token not found',
       });
     }
 
@@ -160,7 +155,7 @@ router.post('/refresh', validateBody(refreshTokenSchema), async (req: Authentica
       await storage.deleteRefreshToken(refreshToken);
       return res.status(401).json({
         success: false,
-        message: 'Refresh token expired'
+        message: 'Refresh token expired',
       });
     }
 
@@ -170,7 +165,7 @@ router.post('/refresh', validateBody(refreshTokenSchema), async (req: Authentica
       await storage.deleteRefreshToken(refreshToken);
       return res.status(401).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -188,14 +183,14 @@ router.post('/refresh', validateBody(refreshTokenSchema), async (req: Authentica
       message: 'Token refreshed successfully',
       data: {
         accessToken,
-        refreshToken: newRefreshToken
-      }
+        refreshToken: newRefreshToken,
+      },
     });
   } catch (error) {
     logger.error('Token refresh error', { error: error.message });
     res.status(500).json({
       success: false,
-      message: 'Token refresh failed'
+      message: 'Token refresh failed',
     });
   }
 });
@@ -212,13 +207,13 @@ router.post('/logout', validateBody(refreshTokenSchema), async (req: Authenticat
 
     res.json({
       success: true,
-      message: 'Logout successful'
+      message: 'Logout successful',
     });
   } catch (error) {
     logger.error('Logout error', { error: error.message });
     res.status(500).json({
       success: false,
-      message: 'Logout failed'
+      message: 'Logout failed',
     });
   }
 });
@@ -229,7 +224,7 @@ router.get('/me', async (req: AuthenticatedRequest, res: Response) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication required'
+        message: 'Authentication required',
       });
     }
 
@@ -237,7 +232,7 @@ router.get('/me', async (req: AuthenticatedRequest, res: Response) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -252,15 +247,15 @@ router.get('/me', async (req: AuthenticatedRequest, res: Response) => {
           xp: user.xp,
           streak: user.streak,
           lastActivity: user.lastActivity,
-          createdAt: user.createdAt
-        }
-      }
+          createdAt: user.createdAt,
+        },
+      },
     });
   } catch (error) {
     logger.error('Get profile error', { error: error.message });
     res.status(500).json({
       success: false,
-      message: 'Failed to get user profile'
+      message: 'Failed to get user profile',
     });
   }
 });

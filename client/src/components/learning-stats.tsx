@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Target, Lightbulb } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle, Target, Lightbulb } from 'lucide-react';
 
 interface Stats {
   accuracy: number;
@@ -16,28 +16,28 @@ export default function LearningStats({ stats }: LearningStatsProps) {
   const recentActivities = [
     {
       id: 1,
-      type: "quiz",
-      title: "Completed \"Cryptography Basics\" quiz",
-      details: "Domain 1 • 8/10 correct • 2 hours ago",
+      type: 'quiz',
+      title: 'Completed "Cryptography Basics" quiz',
+      details: 'Domain 1 • 8/10 correct • 2 hours ago',
       xp: 85,
-      icon: <CheckCircle className="text-primary" />
+      icon: <CheckCircle className="text-primary" />,
     },
     {
       id: 2,
-      type: "lab", 
-      title: "Completed SQL Injection Lab",
-      details: "Domain 2 • Excellent performance • Yesterday",
+      type: 'lab',
+      title: 'Completed SQL Injection Lab',
+      details: 'Domain 2 • Excellent performance • Yesterday',
       xp: 150,
-      icon: <Target className="text-red-600" />
+      icon: <Target className="text-red-600" />,
     },
     {
       id: 3,
-      type: "achievement",
-      title: "Earned \"Security Basics Master\" badge",
-      details: "Achievement unlocked • 2 days ago", 
+      type: 'achievement',
+      title: 'Earned "Security Basics Master" badge',
+      details: 'Achievement unlocked • 2 days ago',
       xp: 250,
-      icon: <CheckCircle className="text-accent" />
-    }
+      icon: <CheckCircle className="text-accent" />,
+    },
   ];
 
   return (
@@ -49,11 +49,12 @@ export default function LearningStats({ stats }: LearningStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className="flex items-center space-x-4 p-3 hover:bg-muted/50 rounded-lg transition-colors">
-                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                  {activity.icon}
-                </div>
+            {recentActivities.map(activity => (
+              <div
+                key={activity.id}
+                className="flex items-center space-x-4 p-3 hover:bg-muted/50 rounded-lg transition-colors"
+              >
+                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">{activity.icon}</div>
                 <div className="flex-1">
                   <p className="font-medium text-foreground">{activity.title}</p>
                   <p className="text-sm text-muted-foreground">{activity.details}</p>
@@ -102,10 +103,9 @@ export default function LearningStats({ stats }: LearningStatsProps) {
               <div>
                 <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-1">Study Recommendation</h4>
                 <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  {stats.weakestDomain 
+                  {stats.weakestDomain
                     ? `Focus on Domain ${stats.weakestDomain} to improve your exam readiness. Consider completing more scenarios in this area.`
-                    : "Keep up the great work! Continue practicing scenarios to maintain your progress."
-                  }
+                    : 'Keep up the great work! Continue practicing scenarios to maintain your progress.'}
                 </p>
               </div>
             </div>

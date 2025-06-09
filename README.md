@@ -14,6 +14,7 @@ A comprehensive cybersecurity training platform built with React, TypeScript, an
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **Vite** for fast development and building
 - **Tailwind CSS** for styling
@@ -22,6 +23,7 @@ A comprehensive cybersecurity training platform built with React, TypeScript, an
 - **Wouter** for routing
 
 ### Backend
+
 - **Express.js** with TypeScript
 - **JWT** for authentication
 - **Drizzle ORM** with PostgreSQL
@@ -30,41 +32,47 @@ A comprehensive cybersecurity training platform built with React, TypeScript, an
 - **Rate limiting** and CORS protection
 
 ### Development Tools
+
 - **ESLint** and **Prettier** for code quality
 - **Vitest** for testing
 - **TypeScript** for type safety
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - PostgreSQL database
 - npm or yarn
 
 ## 🚀 Quick Start
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd CyberDefenseSim
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Set up the database**
+
    ```bash
    npm run db:push
    ```
 
 5. **Start development server**
+
    ```bash
    npm run dev
    ```
@@ -77,11 +85,13 @@ A comprehensive cybersecurity training platform built with React, TypeScript, an
 Copy `.env.example` to `.env` and configure the following variables:
 
 ### Required Variables
+
 - `DATABASE_URL`: PostgreSQL connection string
 - `JWT_SECRET`: Secret key for JWT tokens (minimum 32 characters)
 - `SESSION_SECRET`: Secret key for sessions
 
 ### Optional Variables
+
 - `PORT`: Server port (default: 5000)
 - `NODE_ENV`: Environment (development/production)
 - `ALLOWED_ORIGINS`: Comma-separated list of allowed CORS origins
@@ -141,6 +151,7 @@ The project uses Vitest for testing with the following setup:
 - **Coverage Reports**: Test coverage tracking
 
 Run tests:
+
 ```bash
 npm run test           # Run all tests
 npm run test:watch     # Watch mode
@@ -150,13 +161,16 @@ npm run test:coverage  # With coverage
 ## 🚀 Deployment
 
 ### Production Build
+
 ```bash
 npm run build
 npm run start
 ```
 
 ### Environment Variables for Production
+
 Ensure all required environment variables are set:
+
 - Set `NODE_ENV=production`
 - Use strong, unique secrets for `JWT_SECRET` and `SESSION_SECRET`
 - Configure `DATABASE_URL` for your production database
@@ -171,6 +185,7 @@ Ensure all required environment variables are set:
 5. Open a Pull Request
 
 ### Development Guidelines
+
 - Follow the existing code style (ESLint + Prettier)
 - Write tests for new features
 - Update documentation as needed

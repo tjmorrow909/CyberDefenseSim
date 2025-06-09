@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 
 interface User {
   id: string;
@@ -86,10 +86,7 @@ const apiRequest = async (url: string, options: RequestInit = {}): Promise<any> 
 
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json();
-          AuthTokenManager.setTokens(
-            refreshData.data.accessToken,
-            refreshData.data.refreshToken
-          );
+          AuthTokenManager.setTokens(refreshData.data.accessToken, refreshData.data.refreshToken);
 
           // Retry original request with new token
           return fetch(url, {
@@ -118,7 +115,11 @@ export function useAuth() {
   const queryClient = useQueryClient();
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const { data: user, isLoading, error } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: () => apiRequest('/api/auth/me'),
     enabled: AuthTokenManager.hasTokens() && isInitialized,
@@ -139,7 +140,7 @@ export function useAuth() {
       });
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.success && data.data) {
         AuthTokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
         queryClient.setQueryData(['auth', 'me'], { success: true, data: { user: data.data.user } });
@@ -157,7 +158,7 @@ export function useAuth() {
       });
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.success && data.data) {
         AuthTokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
         queryClient.setQueryData(['auth', 'me'], { success: true, data: { user: data.data.user } });

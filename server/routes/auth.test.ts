@@ -75,10 +75,7 @@ describe('Auth Routes', () => {
       mockedAuthService.generateTokens.mockReturnValue(tokens);
       mockedStorage.storeRefreshToken.mockResolvedValue(undefined);
 
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/api/auth/register').send(userData).expect(201);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(userData.email);
@@ -116,10 +113,7 @@ describe('Auth Routes', () => {
 
       mockedStorage.getUserByEmail.mockResolvedValue(existingUser);
 
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/api/auth/register').send(userData).expect(409);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('already exists');
@@ -133,10 +127,7 @@ describe('Auth Routes', () => {
         password: 'weak',
       };
 
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send(invalidData)
-        .expect(400);
+      const response = await request(app).post('/api/auth/register').send(invalidData).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toBe('Validation failed');
@@ -175,20 +166,14 @@ describe('Auth Routes', () => {
       mockedStorage.storeRefreshToken.mockResolvedValue(undefined);
       mockedStorage.updateUserActivity.mockResolvedValue(undefined);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/api/auth/login').send(loginData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(loginData.email);
       expect(response.body.data.accessToken).toBe(tokens.accessToken);
 
       expect(mockedStorage.getUserByEmail).toHaveBeenCalledWith(loginData.email);
-      expect(mockedAuthService.comparePassword).toHaveBeenCalledWith(
-        loginData.password,
-        user.passwordHash
-      );
+      expect(mockedAuthService.comparePassword).toHaveBeenCalledWith(loginData.password, user.passwordHash);
       expect(mockedStorage.updateUserActivity).toHaveBeenCalledWith(user.id);
     });
 
@@ -215,10 +200,7 @@ describe('Auth Routes', () => {
       mockedStorage.getUserByEmail.mockResolvedValue(user);
       mockedAuthService.comparePassword.mockResolvedValue(false);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/api/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid email or password');
@@ -232,10 +214,7 @@ describe('Auth Routes', () => {
 
       mockedStorage.getUserByEmail.mockResolvedValue(undefined);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/api/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid email or password');
@@ -288,10 +267,7 @@ describe('Auth Routes', () => {
       mockedStorage.deleteRefreshToken.mockResolvedValue(undefined);
       mockedStorage.storeRefreshToken.mockResolvedValue(undefined);
 
-      const response = await request(app)
-        .post('/api/auth/refresh')
-        .send(refreshData)
-        .expect(200);
+      const response = await request(app).post('/api/auth/refresh').send(refreshData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.accessToken).toBe(newTokens.accessToken);
@@ -308,10 +284,7 @@ describe('Auth Routes', () => {
 
       mockedAuthService.verifyToken.mockReturnValue(null);
 
-      const response = await request(app)
-        .post('/api/auth/refresh')
-        .send(refreshData)
-        .expect(401);
+      const response = await request(app).post('/api/auth/refresh').send(refreshData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid refresh token');
@@ -326,10 +299,7 @@ describe('Auth Routes', () => {
 
       mockedStorage.deleteRefreshToken.mockResolvedValue(undefined);
 
-      const response = await request(app)
-        .post('/api/auth/logout')
-        .send(logoutData)
-        .expect(200);
+      const response = await request(app).post('/api/auth/logout').send(logoutData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.message).toContain('Logout successful');

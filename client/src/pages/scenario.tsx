@@ -1,20 +1,20 @@
-import { useParams } from "wouter";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, Trophy, CheckCircle, XCircle, Lightbulb } from "lucide-react";
-import { Link } from "wouter";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { useParams } from 'wouter';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { ArrowLeft, Trophy, CheckCircle, XCircle, Lightbulb } from 'lucide-react';
+import { Link } from 'wouter';
+import { apiRequest } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Scenario() {
   const { id } = useParams();
-  const scenarioId = parseInt(id || "1");
+  const scenarioId = parseInt(id || '1');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -35,7 +35,7 @@ export default function Scenario() {
 
   const updateScenarioMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest("PATCH", `/api/users/1/scenarios/${scenarioId}`, data);
+      return apiRequest('PATCH', `/api/users/1/scenarios/${scenarioId}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/users/1/scenarios/${scenarioId}`] });
@@ -55,12 +55,11 @@ export default function Scenario() {
   }
 
   const questions = scenario.content.questions || [];
-  const isCompleted = currentQuestion >= questions.length;
 
   const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
     setSelectedAnswers(prev => ({
       ...prev,
-      [questionIndex]: answerIndex
+      [questionIndex]: answerIndex,
     }));
   };
 
@@ -73,10 +72,8 @@ export default function Scenario() {
   };
 
   const handleComplete = () => {
-    const correctAnswers = questions.filter((q: any, index: number) => 
-      selectedAnswers[index] === q.correct
-    ).length;
-    
+    const correctAnswers = questions.filter((q: any, index: number) => selectedAnswers[index] === q.correct).length;
+
     const score = Math.round((correctAnswers / questions.length) * 100);
     const timeSpent = Math.round((Date.now() - startTime) / 60000); // minutes
 
@@ -85,39 +82,45 @@ export default function Scenario() {
       score,
       attempts: (userScenario?.attempts || 0) + 1,
       timeSpent: (userScenario?.timeSpent || 0) + timeSpent,
-      completedAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
     });
 
     setShowResults(true);
-    
+
     toast({
-      title: "Scenario Completed!",
+      title: 'Scenario Completed!',
       description: `You scored ${score}% and earned ${scenario.xpReward} XP`,
     });
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'lab': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'scenario': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
-      case 'challenge': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'lab':
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'scenario':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
+      case 'challenge':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'beginner':
+        return 'bg-green-500';
+      case 'intermediate':
+        return 'bg-yellow-500';
+      case 'advanced':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
     }
   };
 
   if (showResults) {
-    const correctAnswers = questions.filter((q: any, index: number) => 
-      selectedAnswers[index] === q.correct
-    ).length;
+    const correctAnswers = questions.filter((q: any, index: number) => selectedAnswers[index] === q.correct).length;
     const score = Math.round((correctAnswers / questions.length) * 100);
 
     return (
@@ -147,7 +150,9 @@ export default function Scenario() {
                   <div className="text-sm text-muted-foreground">Final Score</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary">{correctAnswers}/{questions.length}</div>
+                  <div className="text-3xl font-bold text-primary">
+                    {correctAnswers}/{questions.length}
+                  </div>
                   <div className="text-sm text-muted-foreground">Correct Answers</div>
                 </div>
                 <div className="text-center">
@@ -161,7 +166,7 @@ export default function Scenario() {
                 {questions.map((question: any, index: number) => {
                   const userAnswer = selectedAnswers[index];
                   const isCorrect = userAnswer === question.correct;
-                  
+
                   return (
                     <div key={index} className="border border-border rounded-lg p-4">
                       <div className="flex items-start space-x-3 mb-3">
@@ -174,13 +179,16 @@ export default function Scenario() {
                           <p className="font-medium text-foreground">{question.question}</p>
                           <div className="mt-2 space-y-1">
                             {question.options.map((option: string, optIndex: number) => (
-                              <div key={optIndex} className={`p-2 rounded text-sm ${
-                                optIndex === question.correct 
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
-                                  : optIndex === userAnswer && !isCorrect
-                                  ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
-                                  : 'bg-muted text-muted-foreground'
-                              }`}>
+                              <div
+                                key={optIndex}
+                                className={`p-2 rounded text-sm ${
+                                  optIndex === question.correct
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                    : optIndex === userAnswer && !isCorrect
+                                      ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                                      : 'bg-muted text-muted-foreground'
+                                }`}
+                              >
                                 {option} {optIndex === question.correct && '(Correct)'}
                                 {optIndex === userAnswer && optIndex !== question.correct && '(Your answer)'}
                               </div>
@@ -235,14 +243,10 @@ export default function Scenario() {
             <div className="flex justify-between items-start">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <Badge className={getTypeColor(scenario.type)}>
-                    {scenario.type}
-                  </Badge>
+                  <Badge className={getTypeColor(scenario.type)}>{scenario.type}</Badge>
                   <div className="flex items-center space-x-1">
                     <div className={`w-2 h-2 rounded-full ${getDifficultyColor(scenario.difficulty)}`}></div>
-                    <span className="text-xs text-muted-foreground capitalize">
-                      {scenario.difficulty}
-                    </span>
+                    <span className="text-xs text-muted-foreground capitalize">{scenario.difficulty}</span>
                   </div>
                 </div>
                 <CardTitle className="text-2xl">{scenario.title}</CardTitle>
@@ -259,7 +263,7 @@ export default function Scenario() {
               <h4 className="font-semibold text-foreground mb-2">Scenario Background</h4>
               <p className="text-muted-foreground mb-4">{scenario.content.background}</p>
               <p className="text-foreground font-medium">{scenario.content.scenario}</p>
-              
+
               {scenario.content.codeExample && (
                 <div className="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400">
                   <div className="text-gray-400 mb-2">// Code Example:</div>
@@ -295,7 +299,7 @@ export default function Scenario() {
             <CardContent>
               <RadioGroup
                 value={selectedAnswers[currentQuestion]?.toString()}
-                onValueChange={(value) => handleAnswerSelect(currentQuestion, parseInt(value))}
+                onValueChange={value => handleAnswerSelect(currentQuestion, parseInt(value))}
               >
                 {questions[currentQuestion].options.map((option: string, index: number) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -308,17 +312,14 @@ export default function Scenario() {
               </RadioGroup>
 
               <div className="mt-6 flex justify-between">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setCurrentQuestion(prev => Math.max(0, prev - 1))}
                   disabled={currentQuestion === 0}
                 >
                   Previous
                 </Button>
-                <Button 
-                  onClick={handleNext}
-                  disabled={selectedAnswers[currentQuestion] === undefined}
-                >
+                <Button onClick={handleNext} disabled={selectedAnswers[currentQuestion] === undefined}>
                   {currentQuestion === questions.length - 1 ? 'Complete' : 'Next'}
                 </Button>
               </div>
