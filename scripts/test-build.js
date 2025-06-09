@@ -54,9 +54,10 @@ async function cleanBuild() {
 
 async function installDependencies() {
   console.log('📦 Installing dependencies...');
-  
+
   try {
-    await runCommand('npm', ['ci', '--include=dev']);
+    // Use npm ci without --include=dev since build deps are now in dependencies
+    await runCommand('npm', ['ci']);
     console.log('✅ Dependencies installed successfully');
   } catch (error) {
     console.error('❌ Failed to install dependencies:', error.message);
