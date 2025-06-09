@@ -50,13 +50,39 @@ const corsOptions = {
 
     // Add production domains from environment
     if (process.env.ALLOWED_ORIGINS) {
-      allowedOrigins.push(...process.env.ALLOWED_ORIGINS.split(','));
+      allowedOrigins.push(...process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()));
     }
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Auto-detect Render.com domains
+    if (process.env.RENDER_SERVICE_NAME || process.env.RENDER) {
+      const renderDomain = `https://${process.env.RENDER_SERVICE_NAME || 'cyberdefensesim'}.onrender.com`;
+      allowedOrigins.push(renderDomain);
+    }
+
+    // Auto-detect current domain in production
+    if (process.env.NODE_ENV === 'production') {
+      // Add common production domain patterns
+      if (process.env.RENDER_EXTERNAL_URL) {
+        allowedOrigins.push(process.env.RENDER_EXTERNAL_URL);
+      }
+
+      // Add the specific Render domain we know about
+      allowedOrigins.push('https://cyberdefensesim.onrender.com');
+    }
+
+    // Remove duplicates
+    const uniqueOrigins = [...new Set(allowedOrigins)];
+
+    if (uniqueOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      logger.warn('CORS blocked request from origin', { origin });
+      logger.warn('CORS blocked request from origin', {
+        origin,
+        allowedOrigins: uniqueOrigins,
+        nodeEnv: process.env.NODE_ENV,
+        renderServiceName: process.env.RENDER_SERVICE_NAME,
+        renderExternalUrl: process.env.RENDER_EXTERNAL_URL
+      });
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -65,7 +91,18 @@ const corsOptions = {
   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
 };
 
-app.use(cors(corsOptions));
+// Apply CORS only to API routes, not static assets
+app.use('/api', cors(corsOptions));
+app.use('/health', cors(corsOptions));
+
+// Log CORS configuration on startup
+logger.info('CORS configuration initialized', {
+  nodeEnv: process.env.NODE_ENV,
+  allowedOrigins: process.env.ALLOWED_ORIGINS,
+  renderServiceName: process.env.RENDER_SERVICE_NAME,
+  renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
+  render: process.env.RENDER
+});
 
 // Rate limiting
 const limiter = rateLimit({
@@ -151,15 +188,23 @@ app.use('/api/*', notFoundHandler);
 // Global error handling middleware (must be last)
 app.use(errorHandler);
 
-// Static file serving with proper MIME types
+// Static file serving with proper MIME types and CORS headers
 const staticOptions = {
   setHeaders: (res: Response, filePath: string) => {
+    // Set proper MIME types
     if (filePath.endsWith('.css')) {
       res.setHeader('Content-Type', 'text/css');
     } else if (filePath.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
     } else if (filePath.endsWith('.json')) {
       res.setHeader('Content-Type', 'application/json');
+    }
+
+    // Add CORS headers for static assets in production
+    if (process.env.NODE_ENV === 'production') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     }
   },
   maxAge: process.env.NODE_ENV === 'production' ? '1y' : '0',

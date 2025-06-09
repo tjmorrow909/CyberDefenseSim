@@ -28,7 +28,8 @@
     "setup": "chmod +x scripts/setup-dev.sh && ./scripts/setup-dev.sh",
     "prepare": "husky install",
     "audit:security": "npm audit --audit-level=moderate",
-    "clean": "rm -rf dist coverage .nyc_output"
+    "clean": "rm -rf dist coverage .nyc_output",
+    "test:cors": "node scripts/test-cors.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

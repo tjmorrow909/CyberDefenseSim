@@ -35,6 +35,25 @@ process.on('SIGINT', () => {
 // Initialize database and start server
 async function startServer() {
   try {
+    // Validate environment configuration
+    if (process.env.NODE_ENV === 'production') {
+      const requiredEnvVars = ['JWT_SECRET', 'SESSION_SECRET'];
+      const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+      if (missingVars.length > 0) {
+        logger.error('Missing required environment variables for production', { missingVars });
+        process.exit(1);
+      }
+
+      // Log CORS configuration for debugging
+      logger.info('Production CORS configuration', {
+        allowedOrigins: process.env.ALLOWED_ORIGINS,
+        renderServiceName: process.env.RENDER_SERVICE_NAME,
+        renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
+        render: process.env.RENDER
+      });
+    }
+
     // Initialize database
     await initializeDatabase();
 
@@ -43,11 +62,15 @@ async function startServer() {
       // Initialize WebSocket service after server starts
       wsService = new WebSocketService(server);
 
+      const baseUrl = process.env.NODE_ENV === 'production'
+        ? (process.env.RENDER_EXTERNAL_URL || `https://cyberdefensesim.onrender.com`)
+        : `http://localhost:${port}`;
+
       logger.info(`CyberDefense Simulator server started`, {
         port,
         environment: process.env.NODE_ENV || 'development',
-        url: `http://localhost:${port}`,
-        websocket: `ws://localhost:${port}/ws`,
+        url: baseUrl,
+        websocket: `${baseUrl.replace('http', 'ws')}/ws`,
         database: process.env.DATABASE_URL ? 'Connected' : 'In-memory',
       });
     });
