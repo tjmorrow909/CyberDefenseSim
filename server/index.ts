@@ -35,13 +35,37 @@ process.on('SIGINT', () => {
 // Initialize database and start server
 async function startServer() {
   try {
-    // Validate environment configuration
+    // Log environment information for debugging
+    logger.info('Starting server with environment configuration', {
+      nodeEnv: process.env.NODE_ENV,
+      port: process.env.PORT,
+      hasDatabaseUrl: !!process.env.DATABASE_URL,
+      hasJwtSecret: !!process.env.JWT_SECRET,
+      hasSessionSecret: !!process.env.SESSION_SECRET,
+      renderServiceName: process.env.RENDER_SERVICE_NAME,
+      renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
+      render: process.env.RENDER
+    });
+
+    // Validate environment configuration for production
     if (process.env.NODE_ENV === 'production') {
       const requiredEnvVars = ['JWT_SECRET', 'SESSION_SECRET'];
       const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
       if (missingVars.length > 0) {
-        logger.error('Missing required environment variables for production', { missingVars });
+        logger.error('Missing required environment variables for production', {
+          missingVars,
+          availableEnvVars: Object.keys(process.env).filter(key =>
+            key.includes('JWT') || key.includes('SESSION') || key.includes('DATABASE')
+          )
+        });
+
+        // In production, we should fail fast, but let's provide helpful information
+        logger.error('Please set the following environment variables in your Render dashboard:');
+        missingVars.forEach(varName => {
+          logger.error(`- ${varName}: Generate a secure random string (32+ characters)`);
+        });
+
         process.exit(1);
       }
 

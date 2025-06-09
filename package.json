@@ -29,7 +29,9 @@
     "prepare": "husky install",
     "audit:security": "npm audit --audit-level=moderate",
     "clean": "rm -rf dist coverage .nyc_output",
-    "test:cors": "node scripts/test-cors.js"
+    "test:cors": "node scripts/test-cors.js",
+    "generate:env": "node scripts/generate-env-vars.js",
+    "check:deployment": "node scripts/check-deployment.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

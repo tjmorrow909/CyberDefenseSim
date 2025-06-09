@@ -8,27 +8,53 @@ import path from 'path';
 // Database connection configuration
 const connectionString = process.env.DATABASE_URL;
 
-if (!connectionString) {
-  logger.warn('DATABASE_URL not set. Database features will be disabled.');
+// Validate DATABASE_URL format if provided
+function validateDatabaseUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'postgresql:' || parsed.protocol === 'postgres:';
+  } catch {
+    return false;
+  }
 }
 
-// Create postgres client (only if connection string is available)
+if (!connectionString) {
+  logger.warn('DATABASE_URL not set. Database features will be disabled.');
+} else if (!validateDatabaseUrl(connectionString)) {
+  logger.error('Invalid DATABASE_URL format. Expected postgresql:// or postgres:// URL', {
+    providedUrl: connectionString.substring(0, 20) + '...' // Log only first 20 chars for security
+  });
+}
+
+// Create postgres client (only if connection string is available and valid)
 let client: any = null;
 let db: any = null;
 
-if (connectionString) {
+if (connectionString && validateDatabaseUrl(connectionString)) {
   try {
     client = postgres(connectionString, {
       max: 10,
       idle_timeout: 20,
       connect_timeout: 10,
+      // Add retry logic for connection issues
+      max_lifetime: 60 * 30, // 30 minutes
+      transform: {
+        undefined: null
+      }
     });
 
     // Create drizzle instance
     db = drizzle(client, { schema });
-    logger.info('Database client initialized');
+    logger.info('Database client initialized successfully');
   } catch (error) {
-    logger.error('Failed to initialize database client', { error: error instanceof Error ? error.message : String(error) });
+    logger.error('Failed to initialize database client', {
+      error: error instanceof Error ? error.message : String(error),
+      connectionStringProvided: !!connectionString,
+      connectionStringValid: validateDatabaseUrl(connectionString)
+    });
+    // Don't exit here, let the app continue without database
+    client = null;
+    db = null;
   }
 }
 
@@ -115,23 +141,56 @@ export async function closeDatabaseConnection(): Promise<void> {
 export async function initializeDatabase(): Promise<void> {
   if (!connectionString) {
     logger.warn('Skipping database initialization - no DATABASE_URL provided');
+    logger.info('Application will run without database functionality');
+    return;
+  }
+
+  if (!validateDatabaseUrl(connectionString)) {
+    logger.error('Invalid DATABASE_URL format, skipping database initialization');
+    logger.info('Application will run without database functionality');
+    return;
+  }
+
+  if (!client) {
+    logger.warn('Database client not initialized, skipping database setup');
+    logger.info('Application will run without database functionality');
     return;
   }
 
   try {
-    // Check connection
-    const isConnected = await checkDatabaseConnection();
+    logger.info('Starting database initialization...');
+
+    // Check connection with timeout
+    const connectionTimeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Database connection timeout')), 10000)
+    );
+
+    const connectionCheck = checkDatabaseConnection();
+    const isConnected = await Promise.race([connectionCheck, connectionTimeout]);
+
     if (!isConnected) {
       logger.warn('Database connection failed, continuing without database');
       return;
     }
 
-    // Run migrations
-    await runMigrations();
+    logger.info('Database connection successful, running migrations...');
 
-    logger.info('Database initialization completed');
+    // Run migrations with timeout
+    const migrationTimeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Migration timeout')), 30000)
+    );
+
+    const migration = runMigrations();
+    await Promise.race([migration, migrationTimeout]);
+
+    logger.info('Database initialization completed successfully');
   } catch (error) {
-    logger.error('Database initialization failed', { error: error instanceof Error ? error.message : String(error) });
-    logger.warn('Continuing without database functionality');
+    logger.error('Database initialization failed', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    logger.warn('Continuing without database functionality - this may limit some features');
+
+    // Don't throw the error, let the app continue
   }
 }
